@@ -40,6 +40,7 @@ export function botCommit(match) {
   const cards = handCards(match, bot);
   const key = match.stat;
   const ranked = cards
+    .filter((card) => card.tier <= bot.energy)
     .map((card) => {
       const value = normalized(match, key, card.stats[key]);
       const cover = match.deck.stats
@@ -49,14 +50,17 @@ export function botCommit(match) {
     })
     .sort((a, b) => b.score - a.score);
 
+  if (!ranked.length) return null;
   if (match.difficulty === 'apprentice') {
     const chosen = ranked[Math.floor(match.random() * ranked.length)] ?? ranked[0];
-    return { cardId: chosen.card.id, charge: bot.charges > 0 && match.random() > 0.9 };
+    const charge = bot.charges > 0 && bot.energy >= chosen.card.tier + 1 && match.random() > 0.9;
+    return { cardId: chosen.card.id, charge };
   }
   const chosen = ranked[0];
   const swing = chosen.value < (match.difficulty === 'master' ? 0.45 : 0.3);
   const pressure = match.players[0].score >= match.target - 2;
-  const wantsCharge = bot.charges > 0 && (swing || (pressure && match.difficulty === 'master' && match.random() > 0.5));
+  const canCharge = bot.charges > 0 && bot.energy >= chosen.card.tier + 1;
+  const wantsCharge = canCharge && (swing || (pressure && match.difficulty === 'master' && match.random() > 0.5));
   return { cardId: chosen.card.id, charge: wantsCharge };
 }
 

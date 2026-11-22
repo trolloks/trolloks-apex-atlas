@@ -82,7 +82,7 @@ export function cardHtml(deck, card, opts = {}) {
   return `<div class="${classes.join(' ')}" style="--accent:${deck.accent};--crest:${CRESTS[crestOf(deck, card)].color}" ${action}>
     <div class="card-photo">
       <img src="./assets/${card.img}.jpg" alt="${esc(card.name)}" draggable="false">
-      <span class="card-rank">${roman(index)}</span>
+      <span class="card-cost" title="Cost ${card.tier} energy">${card.tier}</span>
       ${crestMark(deck, card)}
       <span class="card-tier" title="tier ${card.tier}"></span>
     </div>
@@ -323,7 +323,8 @@ export function renderMatch(root, match, ui) {
       ${handHtml(match, 0, ui)}
       <div class="hand-controls">
         <div class="charge-row"><span>${esc(actor.name)} charges</span><span class="charge-pips">${[0, 1].map((i) => `<span class="charge-pip${i < actor.charges ? '' : ' spent'}">${icon('bolt')}</span>`).join('')}</span></div>
-        <button class="toggle ${ui.chargeArmed ? 'on' : ''}" data-action="toggle-charge" ${actor.charges > 0 && match.phase === 'commit' && ui.selectedCard ? '' : 'disabled'}>${ui.chargeArmed ? 'Charge armed +15%' : 'Arm a charge +15%'}</button>
+        <div class="energy-row"><span>Energy</span><span class="energy-pips">${[0, 1, 2].map((i) => `<span class="energy-pip${i < actor.energy ? '' : ' spent'}">${icon('bolt')}</span>`).join('')}</span></div>
+        <button class="toggle ${ui.chargeArmed ? 'on' : ''}" data-action="toggle-charge" ${actor.charges > 0 && actor.energy > (match.deck.cards.find((c) => c.id === ui.selectedCard)?.tier ?? 9) && match.phase === 'commit' && ui.selectedCard ? '' : 'disabled'}>${ui.chargeArmed ? 'Charge armed +15%' : 'Arm a charge (+1 energy)'}</button>
         <div class="hand-cta">
           <button class="btn primary small" data-action="commit" ${ui.selectedCard && match.phase === 'commit' && match.committed[ui.committer ?? 0] === null && !ui.busy ? '' : 'disabled'}>Commit card</button>
           <span class="hint">${esc(hint)}</span>
@@ -444,6 +445,7 @@ export function renderHelp() {
     <ol>
       <li><b>Call the stat.</b> The call alternates each trick; the leader chooses one of the deck's five stats &mdash; mass, height, moons, whatever the deck offers.</li>
       <li><b>Commit a card.</b> Both duelists choose a card in secret. The card with the higher value in the called stat takes the trick and one point.</li>
+      <li><b>Spend energy.</b> Each trick gives 3 energy. A card costs its tier (1&ndash;3); a charge costs 1 more. A tier-3 card leaves nothing for a charge.</li>
       <li><b>Burn a charge.</b> Each duelist has two charges. Arm one before you commit for +15% to the called stat &mdash; a bluff or a rescue.</li>
       <li><b>Ride momentum.</b> Three tricks in a row earns a bonus point.</li>
       <li><b>Know the traits.</b> <b>Apex</b> wins a tied stat. <b>Swift</b> recovers a charge when it loses. <b>Stalwart</b> denies the winner momentum.</li>

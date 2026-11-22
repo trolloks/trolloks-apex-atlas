@@ -30,25 +30,25 @@ function duelScene() {
   match.players[1].score = 2;
   match.players[0].streak = 2;
   match.players[0].run = 2;
-  fillHand(match, 0, ['taj', 'eiffel', 'machu', 'petra']);
+  fillHand(match, 0, ['eiffel', 'taj', 'machu', 'petra']);
   fillHand(match, 1, ['colosseum', 'wall', 'liberty', 'pyramid']);
   match.committed = [null, null];
-  match.players[0].hand = ['taj', 'eiffel', 'machu', 'petra'];
+  match.players[0].hand = ['eiffel', 'taj', 'machu', 'petra'];
   match.players[1].hand = ['colosseum', 'wall', 'liberty', 'pyramid'];
   match.omen = 'sun';
   callStat(match, 'height');
-  commitCard(match, 0, 'taj', false);
-  commitCard(match, 1, 'colosseum', true);
+  commitCard(match, 0, 'eiffel', true);
+  commitCard(match, 1, 'colosseum', false);
   match.players[0].score = 3;
   match.players[1].score = 2;
   reveal(match);
-  match.players[0].hand = ['eiffel', 'machu', 'wall', 'liberty'];
+  match.players[0].hand = ['taj', 'machu', 'wall', 'liberty'];
   match.players[1].hand = ['pyramid', 'petra', 'eiffel', 'machu'];
   match.players[0].draw = ['taj', 'colosseum', 'pyramid', 'petra'];
   match.players[1].draw = ['wall', 'liberty', 'taj', 'colosseum'];
   match.log = [
     'You call HEIGHT. The Regent commits without a word.',
-    'You take the trick, 80.3 m to 55.2 m. The Taj stands tall.',
+    'You take the trick, 417.5 m to 48 m. The Eiffel stands tall.',
   ];
   return { match, ui: {}, screen: 'match' };
 }

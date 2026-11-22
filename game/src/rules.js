@@ -7,6 +7,7 @@ import { createRng, shuffle } from './rng.js';
 
 export const TARGET_POINTS = 7;
 export const HAND_SIZE = 4;
+export const TRICK_ENERGY = 3;
 export const CHARGE_BONUS = 1.15;
 
 export function statRange(deck, key) {
@@ -39,6 +40,7 @@ export function newMatch({ deckId, unlockedIds, mode = 'solo', difficulty = 'ade
     bestStreak: 0,
     charges: 2,
     chargeUsed: false,
+    energy: TRICK_ENERGY,
     scouted: false,
   }));
   const match = {
@@ -107,7 +109,11 @@ export function commitCard(match, playerIndex, cardId, useCharge = false) {
   const player = match.players[playerIndex];
   const at = player.hand.indexOf(cardId);
   if (at === -1) return false;
+  const card = cardOf(match, cardId);
   if (useCharge && player.charges <= 0) useCharge = false;
+  const cost = card.tier + (useCharge ? 1 : 0);
+  if (cost > player.energy) return false;
+  player.energy -= cost;
   player.hand.splice(at, 1);
   if (useCharge) {
     player.charges -= 1;
@@ -192,6 +198,7 @@ export function finishTrick(match) {
     const commit = match.committed[i];
     if (commit) player.discard.push(commit.cardId);
     player.chargeUsed = false;
+    player.energy = TRICK_ENERGY;
     drawToHand(match, player);
   }
   if (match.players.some((player) => player.score >= match.target)) {

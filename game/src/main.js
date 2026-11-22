@@ -319,7 +319,8 @@ app.addEventListener('click', (event) => {
     if (!state.match || !state.ui.selectedCard || state.match.phase !== 'commit') return;
     const committer = state.ui.committer;
     if (state.match.committed[committer] !== null) return;
-    commitCard(state.match, committer, state.ui.selectedCard, state.ui.chargeArmed);
+    const committed = commitCard(state.match, committer, state.ui.selectedCard, state.ui.chargeArmed);
+    if (!committed) return;
     state.ui.selectedCard = null;
     state.ui.chargeArmed = false;
     sound.place();
