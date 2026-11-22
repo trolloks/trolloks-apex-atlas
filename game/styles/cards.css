@@ -1,0 +1,112 @@
+/* Cards: a photographed specimen plate over a field-guide stat block. */
+.card {
+  --card-w: 164px;
+  --accent: var(--brass);
+  position: relative;
+  width: var(--card-w);
+  height: calc(var(--card-w) * 1.5152);
+  border-radius: 4px;
+  overflow: hidden;
+  background: linear-gradient(170deg, #1a2740, #0d1525 72%);
+  border: 1px solid rgba(242, 228, 200, 0.22);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.42), inset 0 0 0 1px rgba(7, 12, 22, 0.7);
+  text-align: left;
+  color: var(--paper);
+  font-family: var(--sans);
+  flex: 0 0 auto;
+  transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+}
+.card::after {
+  content: "";
+  position: absolute; inset: 4px;
+  border: 1px solid color-mix(in srgb, var(--accent) 38%, transparent);
+  border-radius: 2px;
+  pointer-events: none;
+  z-index: 2;
+}
+.card-photo { position: relative; height: 41%; overflow: hidden; background: #0a101d; }
+.card-photo img { width: 100%; height: 100%; object-fit: cover; display: block; filter: saturate(0.92) contrast(1.05) brightness(0.94); }
+.card-photo::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(7, 12, 22, 0.05) 45%, rgba(13, 21, 37, 0.95) 100%);
+}
+.card-rank {
+  position: absolute; top: 6px; left: 7px; z-index: 1;
+  font-family: var(--serif); font-size: 10px; letter-spacing: 0.16em;
+  color: rgba(242, 228, 200, 0.9);
+  background: rgba(7, 12, 22, 0.62); border: 1px solid rgba(242, 228, 200, 0.24);
+  padding: 2px 5px; border-radius: 2px;
+}
+.card-tier {
+  position: absolute; top: 7px; right: 7px; z-index: 1;
+  width: 9px; height: 9px; transform: rotate(45deg);
+  background: #b98a4a; box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+}
+.card.tier-2 .card-tier { background: #cdd8e4; box-shadow: 0 0 8px rgba(205, 216, 228, 0.4); }
+.card.tier-3 .card-tier { background: #e7b85a; box-shadow: 0 0 10px rgba(231, 184, 90, 0.7); }
+.card-body { position: relative; z-index: 1; padding: 4px 7px 3px; height: 59%; display: flex; flex-direction: column; min-height: 0; }
+.card-heading { display: flex; flex-direction: column; gap: 1px; padding-bottom: 4px; border-bottom: 1px solid rgba(242, 228, 200, 0.14); }
+.card-name {
+  font-family: var(--serif);
+  font-size: 10.8px; line-height: 1.05; letter-spacing: 0.045em;
+  text-transform: uppercase; font-weight: 600;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.card-latin { font-family: var(--serif); font-style: italic; font-size: 7.6px; color: var(--paper-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-stats { list-style: none; margin: 2px 0 0; padding: 0; display: flex; flex-direction: column; justify-content: space-between; flex: 1; }
+.stat { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 6px; padding: 0; line-height: 1.25; }
+.stat + .stat { border-top: 1px dotted rgba(242, 228, 200, 0.09); }
+.stat-label { font-size: 6.8px; letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.stat-value { font-size: 9.8px; font-variant-numeric: tabular-nums; font-weight: 700; letter-spacing: 0.01em; color: var(--paper); white-space: nowrap; }
+.stat-unit { font-size: 6.8px; color: var(--muted); letter-spacing: 0.02em; white-space: nowrap; }
+.stat.called { background: color-mix(in srgb, var(--accent) 20%, transparent); margin: 0 -4px; padding: 1px 4px; border-radius: 2px; }
+.stat.called .stat-label { color: var(--paper); }
+.stat.called .stat-value { color: #ffe3a8; }
+.stat.boosted .stat-value { color: #9fe0ff; }
+.card-emblem { position: absolute; right: 7px; bottom: 2px; width: 34px; height: 34px; color: var(--accent); opacity: 0.16; pointer-events: none; z-index: 0; }
+.card-emblem svg { width: 100%; height: 100%; }
+
+/* playable hand cards */
+.card.playable { cursor: pointer; --card-w: 150px; }
+.card.playable:hover, .card.playable:focus-visible { transform: translateY(-10px) rotate(-0.4deg); box-shadow: 0 20px 34px rgba(0, 0, 0, 0.55), 0 0 0 1px var(--brass); border-color: var(--brass); outline: none; }
+.card.playable.selected { transform: translateY(-14px); border-color: var(--brass); box-shadow: 0 0 0 2px var(--brass), 0 22px 38px rgba(0, 0, 0, 0.6); }
+.card.playable.dim { opacity: 0.45; filter: grayscale(0.4); }
+.card.playable.dim:hover { transform: none; }
+
+/* card back */
+.card-back {
+  --card-w: 150px;
+  height: calc(var(--card-w) * 1.5152); width: var(--card-w); border-radius: 4px; flex: 0 0 auto;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(217, 164, 65, 0.18), transparent 55%),
+    repeating-linear-gradient(45deg, rgba(242, 228, 200, 0.045) 0 2px, transparent 2px 8px),
+    linear-gradient(160deg, #1a2942, #0b1220);
+  border: 1px solid rgba(217, 164, 65, 0.45);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4), inset 0 0 0 4px rgba(7, 12, 22, 0.7), inset 0 0 0 5px rgba(217, 164, 65, 0.2);
+  display: grid; place-items: center; color: var(--brass); position: relative;
+}
+.card-back svg { width: 52%; height: 52%; opacity: 0.7; }
+.card-back .back-mark { position: absolute; bottom: 8%; font-family: var(--serif); font-size: 8px; letter-spacing: 0.32em; color: var(--paper-dim); }
+
+/* revealed duel cards */
+.card.on-table { --card-w: 170px; animation: cardLand 420ms cubic-bezier(.2, .9, .25, 1.1) both; }
+.card.on-table.winner { box-shadow: 0 0 0 2px var(--good), 0 18px 40px rgba(0, 0, 0, 0.55); }
+.card.on-table.loser { opacity: 0.72; filter: saturate(0.6); }
+.card.on-table .card-name { font-size: 12.5px; }
+.card.on-table .stat-value { font-size: 11.5px; }
+@keyframes cardLand { from { opacity: 0; transform: translateY(26px) rotate(-2deg) scale(0.94); } to { opacity: 1; transform: none; } }
+
+/* mini collection cards */
+.card.mini { --card-w: 100%; aspect-ratio: auto; height: 100%; box-shadow: none; }
+.card.mini .card-photo { height: 58%; }
+.card.mini .card-body { display: none; }
+.card.mini .card-name-overlay {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 1;
+  padding: 14px 6px 5px; font-family: var(--serif); font-size: 9px; line-height: 1.1; letter-spacing: 0.04em;
+  text-transform: uppercase; background: linear-gradient(180deg, transparent, rgba(7, 12, 22, 0.94));
+}
+
+/* little house / deck emblem inside badges */
+.emblem-wrap { display: inline-grid; place-items: center; }
+.emblem-wrap svg { width: 100%; height: 100%; }
