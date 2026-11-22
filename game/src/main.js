@@ -196,6 +196,8 @@ function afterCommit(committer) {
   const match = state.match;
   if (!match) return;
   if (match.phase === 'reveal') {
+    refreshCommitter();
+    render();
     later(doReveal, 380);
     return;
   }
@@ -351,6 +353,16 @@ modal.addEventListener('click', (event) => {
   if (event.target === modal) closeModal();
 });
 
+app.addEventListener('keydown', (event) => {
+  const el = event.target.closest?.('[data-action]');
+  if (!el) return;
+  if (event.key !== 'Enter' && event.key !== ' ') return;
+  if (el.dataset.action === 'show-card' || el.dataset.action === 'select-card') {
+    event.preventDefault();
+    el.click();
+  }
+});
+
 document.addEventListener('keydown', (event) => {
   if (event.key === 'Escape') {
     if (!modal.hidden) closeModal();
@@ -362,6 +374,7 @@ document.addEventListener('keydown', (event) => {
     return;
   }
   if (!state.match || state.screen !== 'match' || !modal.hidden) return;
+  if (event.target.closest?.('[data-action="show-card"], [data-action="select-card"]')) return;
   const match = state.match;
   if (/^[1-5]$/.test(event.key) && match.phase === 'call') {
     const stat = match.deck.stats[Number(event.key) - 1];

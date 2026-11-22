@@ -66,8 +66,12 @@ export function cardHtml(deck, card, opts = {}) {
   if (opts.dim) classes.push('dim');
   if (opts.duel) classes.push('on-table');
   if (opts.outcome) classes.push(opts.outcome);
-  return `<div class="${classes.join(' ')}" style="--accent:${deck.accent}"
-    ${opts.playable ? `role="button" tabindex="0" data-action="select-card" data-card-id="${card.id}" aria-label="Play ${esc(card.name)}"` : ''}>
+  const action = opts.playable
+    ? `role="button" tabindex="0" data-action="select-card" data-card-id="${card.id}" aria-label="Play ${esc(card.name)}"`
+    : opts.inspect
+      ? `role="button" tabindex="0" data-action="show-card" data-deck="${deck.id}" data-card-id="${card.id}" aria-label="Inspect ${esc(card.name)}"`
+      : '';
+  return `<div class="${classes.join(' ')}" style="--accent:${deck.accent}" ${action}>
     <div class="card-photo">
       <img src="./assets/${card.img}.jpg" alt="${esc(card.name)}" draggable="false">
       <span class="card-rank">${roman(index)}</span>
@@ -170,19 +174,29 @@ function slotHtml(match, index, ui) {
   return `<div class="empty-slot">${match.phase === 'call' ? 'Call a stat' : 'Commit a card'}</div>`;
 }
 
+function visibleHandIndex(match, ui) {
+  if (match.mode !== 'local') return -1;
+  if (match.phase === 'call') return match.leader;
+  if (match.phase === 'commit') return ui.committer ?? 0;
+  return -1;
+}
+
 function handHtml(match, index, ui) {
   const player = match.players[index];
   const isYou = index === 0;
+  const localShown = visibleHandIndex(match, ui);
+  const shown = match.mode === 'local' ? index === localShown : isYou || scoutOpen(match);
   const active = match.mode === 'local'
     ? index === (ui.committer ?? 0) && match.phase === 'commit' && match.committed[index] === null
     : isYou && match.phase === 'commit' && match.committed[0] === null && !ui.busy;
   const label = match.mode === 'local' ? player.name : isYou ? 'Your hand' : 'Regent hand';
-  if (!isYou && match.mode === 'solo' && !scoutOpen(match)) {
-    return `<div class="hand-cards opponent right" aria-label="Opponent hand">
+  if (!shown) {
+    return `<div class="hand-cards opponent right" data-hand="${index}" aria-label="${esc(label)} face down">
       ${player.hand.map(() => `<div class="card-back">${emblem(match.deck.emblem)}</div>`).join('')}
     </div>`;
   }
-  return `<div class="hand-cards ${isYou ? '' : 'opponent right'}" data-hand="${index}" aria-label="${esc(label)}">
+  const sideClass = isYou ? '' : match.mode === 'local' ? 'right' : 'opponent right';
+  return `<div class="hand-cards ${sideClass}" data-hand="${index}" aria-label="${esc(label)}">
     ${player.hand
       .map((id) => {
         const card = match.deck.cards.find((c) => c.id === id);
@@ -190,6 +204,7 @@ function handHtml(match, index, ui) {
           playable: active && match.phase === 'commit',
           selected: ui.selectedCard === id && index === (ui.committer ?? 0),
           dim: !active && match.phase === 'commit',
+          inspect: match.mode === 'solo' && !isYou,
         });
       })
       .join('')}
@@ -229,6 +244,7 @@ export function renderMatch(root, match, ui) {
   const you = match.players[0];
   const rival = match.players[1];
   const actor = match.players[ui.committer ?? 0];
+  const localShown = visibleHandIndex(match, ui);
   const last = match.log[match.log.length - 1] ?? '';
   const result = match.result;
   const winnerName = (index) => match.mode === 'local'
@@ -288,9 +304,9 @@ export function renderMatch(root, match, ui) {
       </div>
     </div>
     <div class="chronicle"><span class="chr-label">Chronicle</span><span class="chr-text">${esc(last)}</span></div>
-    <div class="hand-area ${match.mode === 'local' ? 'local' : ''}">
+    <div class="hand-area ${localShown === 1 ? 'p2' : ''}">
       <div class="hand-meta">
-        <div class="eyebrow">${match.mode === 'local' ? 'Duelists&rsquo; hands' : 'Your hand'}</div>
+        <div class="eyebrow">${match.mode === 'local' ? (localShown >= 0 ? `${match.players[localShown].name}&rsquo;s hand` : 'Hands hidden') : 'Your hand'}</div>
         <div class="hand-note">Your deck ${you.draw.length + you.hand.length} &middot; Regent ${rival.draw.length + rival.hand.length}</div>
       </div>
       ${handHtml(match, 0, ui)}
@@ -421,7 +437,7 @@ export function renderHelp() {
       <li><b>Ride momentum.</b> Three tricks in a row earns a bonus point. A dead heat scores nothing and keeps the call.</li>
       <li><b>Scout once.</b> In solo play, spend your one scouting run to see the Regent's hand for a trick.</li>
     </ol>
-    <p><b>Local 2P:</b> pass the mouse. Both hands are open; each duelist chooses in turn before the reveal.</p>
+    <p><b>Local 2P:</b> pass the mouse. Each duelist sees their own hand when it is their turn to call or commit; the other hand stays face down until the reveal.</p>
     <p><b>Packs:</b> every duel earns a booster pack, and a win earns two. Each pack adds two random cards from any deck to your collection.</p>
     <p class="fine">All numbers are whole-number approximations drawn from the linked Wikipedia articles; the game is a work of playful comparison, not a scientific database.</p>`;
 }

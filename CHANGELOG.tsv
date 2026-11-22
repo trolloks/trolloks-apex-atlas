@@ -4,3 +4,4 @@ r1	2026-11-22T19:48Z	111ac9f	01a204cd-9a83-7228-88ff-ca35896bf598	Accepted entry
 r2	2026-11-22T19:51Z	3f8af2d	01a204d0-ae7c-751f-b3ce-b069b3163442	Bigger duel cards, compass table, boosted stat shown on the card, wider opponent hand
 r3	2026-11-22T20:10Z	d98f3e2	01a204d2-b426-73a0-a077-2474e758a2c0	Cover is now the duel table; title moves to the second screenshot
 r4	2026-11-22T20:05Z	pending	pending	Four-card hands, deck counts, no-overlap hand layout, inactive commit styling
+r5	2026-11-22T20:42Z	pending	pending	Local hot-seat hides the idle hand, scouted cards inspectable, immediate repaint at reveal
