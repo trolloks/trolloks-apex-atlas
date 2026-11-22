@@ -157,3 +157,8 @@
 .stat.omen .stat-value { color: color-mix(in srgb, var(--crest) 42%, #241b10); }
 .card-trait .crest-label { color: color-mix(in srgb, var(--crest) 45%, #241b10); }
 .card-trait b { color: color-mix(in srgb, var(--accent) 50%, #241b10); }
+.card.on-table .card-name { font-size: 14.5px; }
+.card.on-table .stat-value { font-size: 13.2px; }
+.card.on-table .stat-label { font-size: 7.3px; }
+.card.playable .card-name { font-size: 11.4px; }
+.card.playable .stat-value { font-size: 10.3px; }
