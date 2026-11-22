@@ -2,4 +2,4 @@ release	utc	commit	submission_id	change
 r1	2026-11-22T19:45Z	54528de	-	Apex Atlas v1: three decks, 24 cards, stat-call duel, bots, local 2P, packs, 4 screenshots
 r1	2026-11-22T19:48Z	111ac9f	01a204cd-9a83-7228-88ff-ca35896bf598	Accepted entry: pass checks, badges and About fixed
 r2	2026-11-22T19:51Z	3f8af2d	01a204d0-ae7c-751f-b3ce-b069b3163442	Bigger duel cards, compass table, boosted stat shown on the card, wider opponent hand
-r3	2026-11-22T20:10Z	pending	pending	Cover is now the duel table; title moves to the second screenshot
+r3	2026-11-22T20:10Z	d98f3e2	01a204d2-b426-73a0-a077-2474e758a2c0	Cover is now the duel table; title moves to the second screenshot
