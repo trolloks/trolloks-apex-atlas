@@ -46,7 +46,7 @@
 .card.tier-2 .card-tier { background: #cdd8e4; box-shadow: 0 0 8px rgba(205, 216, 228, 0.4); }
 .card.tier-3 .card-tier { background: #e7b85a; box-shadow: 0 0 10px rgba(231, 184, 90, 0.7); }
 .card-body { position: relative; z-index: 1; padding: 4px 7px 3px; height: 59%; display: flex; flex-direction: column; min-height: 0; }
-.card-heading { display: flex; flex-direction: column; gap: 1px; padding-bottom: 4px; border-bottom: 1px solid rgba(242, 228, 200, 0.14); }
+.card-heading { display: flex; flex-direction: column; gap: 1px; padding-bottom: 3px; border-bottom: 1px solid rgba(242, 228, 200, 0.14); }
 .card-name {
   font-family: var(--serif);
   font-size: 10.8px; line-height: 1.05; letter-spacing: 0.045em;
@@ -54,7 +54,10 @@
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .card-latin { font-family: var(--serif); font-style: italic; font-size: 7.6px; color: var(--paper-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.card-stats { list-style: none; margin: 2px 0 0; padding: 0; display: flex; flex-direction: column; justify-content: space-between; flex: 1; }
+.card-trait { font-size: 6.6px; letter-spacing: 0.05em; color: var(--paper-dim); padding: 2px 0 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.card-trait b { color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; font-weight: 700; }
+.card.on-table .card-trait { font-size: 7.6px; }
+.card-stats { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; justify-content: space-between; flex: 1; }
 .stat { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: baseline; gap: 6px; padding: 0; line-height: 1.25; }
 .stat + .stat { border-top: 1px dotted rgba(242, 228, 200, 0.09); }
 .stat-label { font-size: 6.8px; letter-spacing: 0.11em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }

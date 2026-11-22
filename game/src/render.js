@@ -1,7 +1,7 @@
 // All DOM rendering: the title, the duel table, packs, the collection, result and modals.
 // Rule data is read, never written, here.
 
-import { CREDITS, DECKS, DECK_LIST } from './decks.js';
+import { CREDITS, DECKS, DECK_LIST, TRAITS, traitOf } from './decks.js';
 import { deckProgress } from './collection.js';
 import { chargeValue, formatStat, scoutOpen } from './rules.js';
 
@@ -82,6 +82,7 @@ export function cardHtml(deck, card, opts = {}) {
         <div class="card-name">${esc(card.name)}</div>
         <div class="card-latin">${esc(card.latin)}</div>
       </div>
+      <div class="card-trait" title="${esc(TRAITS[traitOf(card)].text)}"><b>${esc(TRAITS[traitOf(card)].name)}</b> ${esc(TRAITS[traitOf(card)].short)}</div>
       <ul class="card-stats">${statsHtml(deck, card, opts)}</ul>
     </div>
     <div class="card-emblem">${emblem(deck.emblem)}</div>
@@ -252,9 +253,9 @@ export function renderMatch(root, match, ui) {
     : index === 0 ? 'You' : 'The Regent';
   const trickLine = result
     ? result.winner === 0
-      ? { text: result.bonus ? `${winnerName(0)} take${match.mode === 'local' ? 's' : ''} it + momentum` : `${winnerName(0)} take${match.mode === 'local' ? 's' : ''} the trick`, cls: 'win' }
+      ? { text: result.tiebreak === 'apex' ? 'Apex breaks the tie' : result.bonus ? `${winnerName(0)} take${match.mode === 'local' ? 's' : ''} it + momentum` : `${winnerName(0)} take${match.mode === 'local' ? 's' : ''} the trick`, cls: 'win' }
       : result.winner === 1
-        ? { text: result.bonus ? `${winnerName(1)} + momentum` : `${winnerName(1)} takes the trick`, cls: 'loss' }
+        ? { text: result.tiebreak === 'apex' ? 'Apex breaks the tie' : result.bonus ? `${winnerName(1)} + momentum` : `${winnerName(1)} takes the trick`, cls: 'loss' }
         : { text: 'Dead heat: no point', cls: 'tie' }
     : { text: match.phase === 'call' ? `${leader.name} calls the stat` : 'Cards are set', cls: '' };
   const busyNote = ui.busy ? 'The Regent is thinking…' : '';
@@ -434,7 +435,8 @@ export function renderHelp() {
       <li><b>Call the stat.</b> The call alternates each trick; the leader chooses one of the deck's five stats &mdash; mass, height, moons, whatever the deck offers.</li>
       <li><b>Commit a card.</b> Both duelists choose a card in secret. The card with the higher value in the called stat takes the trick and one point.</li>
       <li><b>Burn a charge.</b> Each duelist has two charges. Arm one before you commit for +15% to the called stat &mdash; a bluff or a rescue.</li>
-      <li><b>Ride momentum.</b> Three tricks in a row earns a bonus point. A dead heat scores nothing and keeps the call.</li>
+      <li><b>Ride momentum.</b> Three tricks in a row earns a bonus point.</li>
+      <li><b>Know the traits.</b> <b>Apex</b> wins a tied stat. <b>Swift</b> recovers a charge when it loses. <b>Stalwart</b> denies the winner momentum.</li>
       <li><b>Scout once.</b> In solo play, spend your one scouting run to see the Regent's hand for a trick.</li>
     </ol>
     <p><b>Local 2P:</b> pass the mouse. Each duelist sees their own hand when it is their turn to call or commit; the other hand stays face down until the reveal.</p>

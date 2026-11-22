@@ -154,6 +154,19 @@ export const DECKS = {
 
 export const DECK_LIST = Object.values(DECKS);
 
+// Every card carries the trait of its tier: a small twist beyond its numbers.
+export const TRAITS = {
+  apex: { name: 'Apex', short: 'Wins ties', text: 'Wins a tied stat.' },
+  swift: { name: 'Swift', short: 'Lose: +1 charge', text: 'If it loses, gain a charge.' },
+  stalwart: { name: 'Stalwart', short: 'Lose: no momentum', text: 'If it loses, the winner gains no momentum.' },
+};
+
+export function traitOf(card) {
+  if (card.tier === 3) return 'apex';
+  if (card.tier === 1) return 'swift';
+  return 'stalwart';
+}
+
 export const CREDITS = [
   { title: 'African bush elephant', artist: 'Giles Laurent', license: 'CC BY-SA 4.0', source: 'African_bush_elephant' },
   { title: 'Blue whale', artist: 'NOAA Photo Library', license: 'Public domain', source: 'Blue_whale' },

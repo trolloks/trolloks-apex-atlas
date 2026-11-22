@@ -2,7 +2,7 @@
 // The leader calls one of five stats; both duelists commit a card and may burn a charge
 // for +15%; the higher value takes the trick and one point, three in a row add a bonus.
 
-import { DECKS } from './decks.js';
+import { DECKS, TRAITS, traitOf } from './decks.js';
 import { createRng, shuffle } from './rng.js';
 
 export const TARGET_POINTS = 7;
@@ -127,10 +127,19 @@ export function reveal(match) {
   });
   const [a, b] = sides;
   let winner = -1;
+  let tiebreak = null;
   if (a.value > b.value) winner = 0;
   else if (b.value > a.value) winner = 1;
+  else {
+    const aApex = traitOf(a.card) === 'apex';
+    const bApex = traitOf(b.card) === 'apex';
+    if (aApex !== bApex) {
+      winner = aApex ? 0 : 1;
+      tiebreak = 'apex';
+    }
+  }
 
-  match.result = { stat, sides, winner };
+  match.result = { stat, sides, winner, tiebreak };
   if (winner === -1) {
     for (const player of match.players) {
       player.streak = 0;
@@ -141,12 +150,22 @@ export function reveal(match) {
     const player = match.players[winner];
     const other = match.players[1 - winner];
     player.score += 1;
-    player.streak += 1;
     player.run += 1;
     player.bestStreak = Math.max(player.bestStreak, player.run);
+    const loserCard = sides[1 - winner].card;
+    const loserTrait = traitOf(loserCard);
+    if (loserTrait === 'stalwart') {
+      say(match, `${loserCard.name} stands stalwart: no momentum from this trick.`);
+    } else {
+      player.streak += 1;
+    }
+    if (loserTrait === 'swift' && other.charges < 2) {
+      other.charges += 1;
+      say(match, `${loserCard.name} is swift: its duelist recovers a charge.`);
+    }
     other.streak = 0;
     other.run = 0;
-    say(match, `${player.name} takes the trick, ${a.value} to ${b.value}.`);
+    say(match, `${player.name} takes the trick, ${a.value} to ${b.value}.${tiebreak === 'apex' ? ' Apex breaks the tie.' : ''}`);
     if (player.streak === 3) {
       player.score += 1;
       player.streak = 0;
