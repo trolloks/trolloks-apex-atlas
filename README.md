@@ -1,3 +1,7 @@
+[![make.fun · best-card-game-20261122-1826](https://make.fun/badge/best-card-game-20261122-1826.svg)](https://make.fun/bounty/best-card-game-20261122-1826?utm_source=github&utm_medium=readme&utm_campaign=best-card-game-20261122-1826)
+[![rank](https://make.fun/badge/best-card-game-20261122-1826/trolloks/trolloks-apex-atlas/rank.svg)](https://make.fun/bounty/best-card-game-20261122-1826/leaderboard?utm_source=github&utm_medium=readme&utm_campaign=best-card-game-20261122-1826)
+[![reward](https://make.fun/badge/best-card-game-20261122-1826/trolloks/trolloks-apex-atlas/reward.svg)](https://make.fun/bounty/best-card-game-20261122-1826?utm_source=github&utm_medium=readme&utm_campaign=best-card-game-20261122-1826)
+
 # Apex Atlas
 
 An original card duel about the real world. Two duelists share one deck of real animals,
@@ -6,7 +10,7 @@ both commit a card. Higher takes the trick, three in a row earns momentum, and t
 seven points wins. Two-player local and three bot temperaments, plus booster packs that
 unlock more of the atlas.
 
-Built for make.fun's "Make the best card game" bounty. Everything runs offline from
+Built for [make.fun's "Make the best card game" bounty](https://make.fun/bounty/best-card-game-20261122-1826). Everything runs offline from
 `game/`: no build step, no network requests, no third-party engine.
 
 ## Play
