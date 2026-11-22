@@ -35,6 +35,7 @@ function duelScene() {
   match.committed = [null, null];
   match.players[0].hand = ['taj', 'eiffel', 'machu', 'petra'];
   match.players[1].hand = ['colosseum', 'wall', 'liberty', 'pyramid'];
+  match.omen = 'sun';
   callStat(match, 'height');
   commitCard(match, 0, 'taj', false);
   commitCard(match, 1, 'colosseum', true);
@@ -47,7 +48,7 @@ function duelScene() {
   match.players[1].draw = ['wall', 'liberty', 'taj', 'colosseum'];
   match.log = [
     'You call HEIGHT. The Regent commits without a word.',
-    'You take the trick, 73 m to 55.2 m. The Taj stands tall.',
+    'You take the trick, 80.3 m to 55.2 m. The Taj stands tall.',
   ];
   return { match, ui: {}, screen: 'match' };
 }
@@ -55,6 +56,7 @@ function duelScene() {
 function winScene() {
   const match = baseMatch('beasts', 31);
   match.trick = 9;
+  match.omen = 'moon';
   match.players[0].score = 7;
   match.players[1].score = 4;
   match.players[0].bestStreak = 3;
@@ -63,9 +65,20 @@ function winScene() {
   match.phase = 'over';
   match.winner = 0;
   match.stat = 'mass';
-  match.committed = [null, null];
-  fillHand(match, 0, ['blue-whale', 'elephant', 'cheetah', 'grizzly']);
-  fillHand(match, 1, ['crocodile', 'python', 'ostrich', 'peregrine']);
+  match.committed = [{ cardId: 'blue-whale', charge: false }, { cardId: 'crocodile', charge: true }];
+  match.result = {
+    stat: { key: 'mass', label: 'Mass', unit: 'kg', icon: 'weight' },
+    sides: [
+      { card: match.deck.cards.find((c) => c.id === 'blue-whale'), raw: 150000, value: 165000, charge: false, omen: true },
+      { card: match.deck.cards.find((c) => c.id === 'crocodile'), raw: 1000, value: 1150, charge: true, omen: false },
+    ],
+    winner: 0,
+    omen: 'moon',
+  };
+  match.players[0].hand = ['elephant', 'cheetah', 'grizzly', 'peregrine'];
+  match.players[1].hand = ['python', 'ostrich', 'elephant', 'cheetah'];
+  match.players[0].draw = ['blue-whale', 'crocodile', 'python', 'ostrich'];
+  match.players[1].draw = ['blue-whale', 'crocodile', 'grizzly', 'peregrine'];
   match.log = ['The blue whale outweighs the court. The Regent concedes.'];
   return { match, reward: 2, screen: 'result' };
 }
@@ -73,6 +86,7 @@ function winScene() {
 function lossScene() {
   const match = baseMatch('worlds', 43);
   match.trick = 10;
+  match.omen = 'star';
   match.players[0].score = 5;
   match.players[1].score = 7;
   match.players[1].bestStreak = 3;
@@ -81,8 +95,20 @@ function lossScene() {
   match.phase = 'over';
   match.winner = 1;
   match.stat = 'moons';
-  fillHand(match, 0, ['earth', 'mars', 'mercury', 'venus']);
-  fillHand(match, 1, ['saturn', 'jupiter', 'neptune', 'uranus']);
+  match.committed = [{ cardId: 'earth', charge: false }, { cardId: 'saturn', charge: false }];
+  match.result = {
+    stat: { key: 'moons', label: 'Moons', unit: 'known', icon: 'moon' },
+    sides: [
+      { card: match.deck.cards.find((c) => c.id === 'earth'), raw: 1, value: 1.1, charge: false, omen: true },
+      { card: match.deck.cards.find((c) => c.id === 'saturn'), raw: 146, value: 160.6, charge: false, omen: true },
+    ],
+    winner: 1,
+    omen: 'star',
+  };
+  match.players[0].hand = ['mars', 'mercury', 'venus', 'jupiter'];
+  match.players[1].hand = ['uranus', 'neptune', 'earth', 'mars'];
+  match.players[0].draw = ['earth', 'saturn', 'uranus', 'neptune'];
+  match.players[1].draw = ['earth', 'saturn', 'venus', 'jupiter'];
   match.log = ['Saturn\u2019s swarm of moons seals the atlas. The Regent bows.'];
   return { match, reward: 1, screen: 'result' };
 }

@@ -43,6 +43,9 @@
 .stat-chip:disabled.called { opacity: 1; }
 .stat-chip .chip-value { font-variant-numeric: tabular-nums; color: var(--paper); font-size: 10.5px; }
 .call-hint { font-size: 10px; color: var(--paper-dim); font-style: italic; font-family: var(--serif); white-space: nowrap; }
+.omen-chip { display: inline-flex; align-items: center; gap: 6px; border: 1px solid color-mix(in srgb, var(--crest) 55%, transparent); background: color-mix(in srgb, var(--crest) 10%, transparent); color: var(--paper); font-size: 8.5px; letter-spacing: 0.15em; text-transform: uppercase; padding: 6px 9px; border-radius: 3px; white-space: nowrap; }
+.omen-chip.small { padding: 3px 7px; font-size: 7.5px; margin-top: 4px; }
+.crest-dot { width: 8px; height: 8px; background: var(--crest); transform: rotate(45deg); box-shadow: 0 0 6px color-mix(in srgb, var(--crest) 65%, transparent); }
 .call-hint strong { color: var(--brass); font-style: normal; }
 
 /* ---------- duel stage ---------- */

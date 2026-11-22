@@ -167,6 +167,19 @@ export function traitOf(card) {
   return 'stalwart';
 }
 
+// Three crests cut across every deck: a card's crest can catch the trick's omen.
+export const CRESTS = {
+  sun: { name: 'Sun', color: '#e0a83c' },
+  moon: { name: 'Moon', color: '#7fb9e8' },
+  star: { name: 'Star', color: '#c9604f' },
+};
+
+export const CREST_KEYS = ['sun', 'moon', 'star'];
+
+export function crestOf(deck, card) {
+  return CREST_KEYS[deck.cards.indexOf(card) % CREST_KEYS.length];
+}
+
 export const CREDITS = [
   { title: 'African bush elephant', artist: 'Giles Laurent', license: 'CC BY-SA 4.0', source: 'African_bush_elephant' },
   { title: 'Blue whale', artist: 'NOAA Photo Library', license: 'Public domain', source: 'Blue_whale' },

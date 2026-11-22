@@ -21,6 +21,17 @@ node serve.ts          # serves game/ on http://localhost:8080
 
 Then open <http://localhost:8080>.
 
+## The duel
+
+- Four-card hands; the stat call alternates each trick.
+- Each card carries a **crest** (Sun, Moon or Star) and a **trait**:
+  **Apex** wins ties, **Swift** refunds a charge when it loses, **Stalwart**
+  denies the winner momentum.
+- Each trick reveals an **omen** crest; its cards add 10% to the called stat.
+- Two charges per duel add 15%, one scouting run opens the Regent's hand, and
+  three tricks in a row earn a momentum point. First to seven points wins.
+- Booster packs unlock the rest of the atlas across all three decks.
+
 ## The entry
 
 - `game/` — the playable static game (`index.html`, ES modules, CSS, photos)

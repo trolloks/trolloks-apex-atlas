@@ -1,9 +1,9 @@
 // All DOM rendering: the title, the duel table, packs, the collection, result and modals.
 // Rule data is read, never written, here.
 
-import { CREDITS, DECKS, DECK_LIST, TRAITS, traitOf } from './decks.js';
+import { CREDITS, CRESTS, DECKS, DECK_LIST, TRAITS, crestOf, traitOf } from './decks.js';
 import { deckProgress } from './collection.js';
-import { chargeValue, formatStat, scoutOpen } from './rules.js';
+import { chargeValue, formatNumber, formatStat, scoutOpen } from './rules.js';
 
 const ICONS = {
   weight: '<path d="M4 9h16M6 9v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9M9 9V6a3 3 0 0 1 6 0v3"/>',
@@ -31,6 +31,11 @@ function icon(name, cls = '') {
   return `<svg class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${ICONS[name] ?? ICONS.star}</svg>`;
 }
 
+function crestMark(deck, card, cls = '') {
+  const crest = CRESTS[crestOf(deck, card)];
+  return `<span class="card-crest ${cls}" style="--crest:${crest.color}" title="${crest.name} crest"><i></i></span>`;
+}
+
 function emblem(name) {
   const map = { paw: 'paw', column: 'column', ring: 'ring' };
   return icon(map[name] ?? 'star');
@@ -49,8 +54,11 @@ function statsHtml(deck, card, opts = {}) {
     .map((stat) => {
       const called = opts.called === stat.key ? ' called' : '';
       const boosted = opts.boosted && opts.called === stat.key;
-      const value = boosted ? chargeValue(card.stats[stat.key]) : card.stats[stat.key];
-      return `<li class="stat${called}${boosted ? ' boosted' : ''}" ${boosted ? 'title="Charge: +15%"' : ''}>
+      const omen = opts.omen && opts.called === stat.key;
+      let value = card.stats[stat.key];
+      if (boosted) value = chargeValue(value);
+      if (omen) value = Math.round(value * 1.1 * 10) / 10;
+      return `<li class="stat${called}${boosted ? ' boosted' : ''}${omen ? ' omen' : ''}" ${boosted ? 'title="Charge: +15%"' : ''}>
         <span class="stat-label">${esc(stat.label)}</span>
         <span class="stat-value">${formatStat(stat, value)}${boosted ? '<span class="charge-mark" aria-label="charged"> +</span>' : ''}</span>
       </li>`;
@@ -71,10 +79,11 @@ export function cardHtml(deck, card, opts = {}) {
     : opts.inspect
       ? `role="button" tabindex="0" data-action="show-card" data-deck="${deck.id}" data-card-id="${card.id}" aria-label="Inspect ${esc(card.name)}"`
       : '';
-  return `<div class="${classes.join(' ')}" style="--accent:${deck.accent}" ${action}>
+  return `<div class="${classes.join(' ')}" style="--accent:${deck.accent};--crest:${CRESTS[crestOf(deck, card)].color}" ${action}>
     <div class="card-photo">
       <img src="./assets/${card.img}.jpg" alt="${esc(card.name)}" draggable="false">
       <span class="card-rank">${roman(index)}</span>
+      ${crestMark(deck, card)}
       <span class="card-tier" title="tier ${card.tier}"></span>
     </div>
     <div class="card-body">
@@ -159,7 +168,7 @@ export function renderTitle(root, ui) {
 function slotHtml(match, index, ui) {
   const player = match.players[index];
   const commit = match.committed[index];
-  const revealed = match.phase === 'resolve' || (match.phase === 'reveal' && ui.revealNow);
+  const revealed = match.phase === 'resolve' || match.over || (match.phase === 'reveal' && ui.revealNow);
   if (commit && revealed) {
     const card = match.deck.cards.find((c) => c.id === commit.cardId);
     const side = match.result?.sides?.[index];
@@ -168,6 +177,7 @@ function slotHtml(match, index, ui) {
       duel: true,
       called: match.stat,
       boosted: side?.charge,
+      omen: side?.omen,
       outcome,
     });
   }
@@ -229,9 +239,9 @@ function compareHtml(match) {
     const stat = match.result.stat;
     const [a, b] = match.result.sides;
     return `<div class="compare-values">
-        <span class="you">${formatStat(stat, a.value)}</span><span class="sep">&ndash;</span><span class="bot">${formatStat(stat, b.value)}</span>
+        <span class="you">${formatNumber(a.value)}</span><span class="sep">&ndash;</span><span class="bot">${formatNumber(b.value)}</span>
       </div>
-      <div class="compare-label">${esc(stat.label)}</div>`;
+      <div class="compare-label">${esc(stat.label)}${stat.unit ? ` &middot; ${esc(stat.unit)}` : ''}</div>`;
   }
   if (match.stat) {
     const stat = match.deck.stats.find((s) => s.key === match.stat);
@@ -287,7 +297,7 @@ export function renderMatch(root, match, ui) {
     <div class="call-bar">
       <span class="call-label">Call the stat</span>
       <div class="stat-chips">${statChips(match, ui)}</div>
-      <span class="call-hint">${hint.includes('call') ? '' : ''}</span>
+      <span class="omen-chip" style="--crest:${CRESTS[match.omen].color}" title="This trick's omen: a card of this crest gains +10%"><span class="crest-dot"></span>Omen ${esc(CRESTS[match.omen].name)}</span>
     </div>
     <div class="duel">
       <div class="duel-side">
@@ -437,6 +447,7 @@ export function renderHelp() {
       <li><b>Burn a charge.</b> Each duelist has two charges. Arm one before you commit for +15% to the called stat &mdash; a bluff or a rescue.</li>
       <li><b>Ride momentum.</b> Three tricks in a row earns a bonus point.</li>
       <li><b>Know the traits.</b> <b>Apex</b> wins a tied stat. <b>Swift</b> recovers a charge when it loses. <b>Stalwart</b> denies the winner momentum.</li>
+      <li><b>Watch the omen.</b> Each trick names a crest &mdash; Sun, Moon or Star. A committed card of that crest adds 10% to the called stat.</li>
       <li><b>Scout once.</b> In solo play, spend your one scouting run to see the Regent's hand for a trick.</li>
     </ol>
     <p><b>Local 2P:</b> pass the mouse. Each duelist sees their own hand when it is their turn to call or commit; the other hand stays face down until the reveal.</p>

@@ -2,7 +2,7 @@
 // The leader calls one of five stats; both duelists commit a card and may burn a charge
 // for +15%; the higher value takes the trick and one point, three in a row add a bonus.
 
-import { DECKS, TRAITS, traitOf } from './decks.js';
+import { CRESTS, CREST_KEYS, DECKS, TRAITS, crestOf, traitOf } from './decks.js';
 import { createRng, shuffle } from './rng.js';
 
 export const TARGET_POINTS = 7;
@@ -52,6 +52,7 @@ export function newMatch({ deckId, unlockedIds, mode = 'solo', difficulty = 'ade
     players,
     leader: 0,
     trick: 1,
+    omen: CREST_KEYS[Math.floor(rng() * CREST_KEYS.length)],
     phase: 'call',
     stat: null,
     committed: [null, null],
@@ -123,7 +124,10 @@ export function reveal(match) {
   const sides = match.committed.map((commit) => {
     const card = cardOf(match, commit.cardId);
     const raw = card.stats[match.stat];
-    return { card, raw, value: commit.charge ? chargeValue(raw) : raw, charge: commit.charge };
+    const omen = crestOf(match.deck, card) === match.omen;
+    let value = commit.charge ? chargeValue(raw) : raw;
+    if (omen) value = Math.round(value * 1.1 * 10) / 10;
+    return { card, raw, value, charge: commit.charge, omen };
   });
   const [a, b] = sides;
   let winner = -1;
@@ -139,7 +143,11 @@ export function reveal(match) {
     }
   }
 
-  match.result = { stat, sides, winner, tiebreak };
+  match.result = { stat, sides, winner, tiebreak, omen: match.omen };
+  if (sides.some((side) => side.omen)) {
+    const marked = sides.filter((side) => side.omen).map((side) => side.card.name).join(' and ');
+    say(match, `${CRESTS[match.omen].name} omen: ${marked} gains +10%.`);
+  }
   if (winner === -1) {
     for (const player of match.players) {
       player.streak = 0;
@@ -200,6 +208,7 @@ export function finishTrick(match) {
   match.stat = null;
   match.result = null;
   match.trick += 1;
+  match.omen = CREST_KEYS[Math.floor(match.random() * CREST_KEYS.length)];
   match.phase = 'call';
 }
 
@@ -217,9 +226,13 @@ export function scoutOpen(match) {
   return match.mode === 'solo' && match.players[0].scouted && match.trick < match.scoutTrick;
 }
 
-export function formatStat(stat, value) {
+export function formatNumber(value) {
   const digits = Number.isInteger(value) ? 0 : 1;
-  return `${value.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits })}${stat.unit ? ` ${stat.unit}` : ''}`;
+  return value.toLocaleString('en-US', { minimumFractionDigits: digits, maximumFractionDigits: digits });
+}
+
+export function formatStat(stat, value) {
+  return `${formatNumber(value)}${stat.unit ? ` ${stat.unit}` : ''}`;
 }
 
 export function statLabel(deck, key) {

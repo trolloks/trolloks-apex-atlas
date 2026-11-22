@@ -6,4 +6,5 @@ r3	2026-11-22T20:10Z	d98f3e2	01a204d2-b426-73a0-a077-2474e758a2c0	Cover is now t
 r4	2026-11-22T20:05Z	pending	pending	Four-card hands, deck counts, no-overlap hand layout, inactive commit styling
 r5	2026-11-22T20:45Z	ecf9737	01a204e6-0f76-76ca-b17d-78f88aac5c53	Local hot-seat hides the idle hand, scouted cards inspectable, immediate repaint at reveal
 r6	2026-11-22T21:12Z	ddf463a	01a204f3-71d0-778b-8983-10f1ce4ad38e	Alternating stat call each trick; balanced matches; help text updated
-r7	2026-11-22T20:56Z	57f1dde	01a204fb-8d64-754e-bc79-b2b68b018051	Card traits: Apex wins ties, Swift refunds a charge, Stalwart denies momentum
+r7	2026-11-22T20:56Z	57f1dde	01a204fb-8d64-754e-bc79-b2b68b018051	Card traits: Apex wins ties, Swift refunds a charge, Stalwart denies momentum; round 1 rank 611/2744 (0.584)
+r8	2026-11-22T22:17Z	pending	pending	Round-2 rework: sun/moon/star crests, per-trick omen +10%, result banners over the final trick
