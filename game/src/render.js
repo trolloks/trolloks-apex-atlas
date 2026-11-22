@@ -3,7 +3,7 @@
 
 import { CREDITS, DECKS, DECK_LIST } from './decks.js';
 import { deckProgress } from './collection.js';
-import { formatStat, scoutOpen } from './rules.js';
+import { chargeValue, formatStat, scoutOpen } from './rules.js';
 
 const ICONS = {
   weight: '<path d="M4 9h16M6 9v8a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V9M9 9V6a3 3 0 0 1 6 0v3"/>',
@@ -48,10 +48,11 @@ function statsHtml(deck, card, opts = {}) {
   return deck.stats
     .map((stat) => {
       const called = opts.called === stat.key ? ' called' : '';
-      const boosted = opts.boosted && opts.called === stat.key ? ' boosted' : '';
-      return `<li class="stat${called}${boosted}">
+      const boosted = opts.boosted && opts.called === stat.key;
+      const value = boosted ? chargeValue(card.stats[stat.key]) : card.stats[stat.key];
+      return `<li class="stat${called}${boosted ? ' boosted' : ''}" ${boosted ? 'title="Charge: +15%"' : ''}>
         <span class="stat-label">${esc(stat.label)}</span>
-        <span class="stat-value">${formatStat(stat, card.stats[stat.key])}</span>
+        <span class="stat-value">${formatStat(stat, value)}${boosted ? '<span class="charge-mark" aria-label="charged"> +</span>' : ''}</span>
       </li>`;
     })
     .join('');
