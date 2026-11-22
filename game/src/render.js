@@ -230,11 +230,14 @@ export function renderMatch(root, match, ui) {
   const actor = match.players[ui.committer ?? 0];
   const last = match.log[match.log.length - 1] ?? '';
   const result = match.result;
+  const winnerName = (index) => match.mode === 'local'
+    ? match.players[index].name
+    : index === 0 ? 'You' : 'The Regent';
   const trickLine = result
     ? result.winner === 0
-      ? { text: result.bonus ? 'You take it + momentum' : 'You take the trick', cls: 'win' }
+      ? { text: result.bonus ? `${winnerName(0)} take${match.mode === 'local' ? 's' : ''} it + momentum` : `${winnerName(0)} take${match.mode === 'local' ? 's' : ''} the trick`, cls: 'win' }
       : result.winner === 1
-        ? { text: result.bonus ? 'Regent + momentum' : 'Regent takes the trick', cls: 'loss' }
+        ? { text: result.bonus ? `${winnerName(1)} + momentum` : `${winnerName(1)} takes the trick`, cls: 'loss' }
         : { text: 'Dead heat: no point', cls: 'tie' }
     : { text: match.phase === 'call' ? `${leader.name} calls the stat` : 'Cards are set', cls: '' };
   const busyNote = ui.busy ? 'The Regent is thinking…' : '';
@@ -255,7 +258,7 @@ export function renderMatch(root, match, ui) {
       <div class="trick-center">
         <div class="eyebrow">Trick ${match.trick}</div>
         <div class="target">First to ${match.target}</div>
-        <div class="streak">${you.streak ? `You &times;${you.streak} streak` : rival.streak ? `Regent &times;${rival.streak} streak` : ''}</div>
+        <div class="streak">${you.run ? `${you.name} &times;${you.run} streak` : rival.run ? `${rival.name} &times;${rival.run} streak` : ''}</div>
       </div>
       <div class="score-panel right">
         <span class="crest">${emblem(match.deck.emblem)}</span>

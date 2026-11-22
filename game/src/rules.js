@@ -34,6 +34,7 @@ export function newMatch({ deckId, unlockedIds, mode = 'solo', difficulty = 'ade
     discard: [],
     score: 0,
     streak: 0,
+    run: 0,
     bestStreak: 0,
     charges: 2,
     chargeUsed: false,
@@ -85,7 +86,8 @@ export function say(match, text) {
 }
 
 export function chargeValue(value) {
-  return Math.round(value * CHARGE_BONUS * 10) / 10;
+  const boosted = value < 0 ? value / CHARGE_BONUS : value * CHARGE_BONUS;
+  return Math.round(boosted * 10) / 10;
 }
 
 export function callStat(match, key) {
@@ -129,15 +131,20 @@ export function reveal(match) {
 
   match.result = { stat, sides, winner };
   if (winner === -1) {
-    for (const player of match.players) player.streak = 0;
+    for (const player of match.players) {
+      player.streak = 0;
+      player.run = 0;
+    }
     say(match, `Dead heat: ${a.value} to ${b.value}. No point, the call stands.`);
   } else {
     const player = match.players[winner];
     const other = match.players[1 - winner];
     player.score += 1;
     player.streak += 1;
-    player.bestStreak = Math.max(player.bestStreak, player.streak);
+    player.run += 1;
+    player.bestStreak = Math.max(player.bestStreak, player.run);
     other.streak = 0;
+    other.run = 0;
     say(match, `${player.name} takes the trick, ${a.value} to ${b.value}.`);
     if (player.streak === 3) {
       player.score += 1;

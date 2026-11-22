@@ -18,6 +18,7 @@ import {
   renderTitle,
 } from './render.js';
 import { stageShot } from './shots.js';
+import { createRng } from './rng.js';
 
 const app = document.getElementById('app');
 const screens = {
@@ -33,7 +34,7 @@ const statusLine = document.getElementById('status');
 const params = new URLSearchParams(window.location.search);
 const shotName = params.get('shot');
 const shotSeed = Number.parseInt(params.get('seed') ?? '', 10);
-const effects = createEffects(document.getElementById('fx'));
+const effects = createEffects(document.getElementById('fx'), shotName ? createRng(20261122) : Math.random);
 
 const state = {
   screen: 'title',
@@ -127,11 +128,11 @@ function startMatch() {
   refreshCommitter();
   render();
   announce(`${deck.name}: ${state.match.players[0].name} to call the first stat.`);
-  if (state.match.leader === 1) later(botTakeCall, 900);
+  if (state.match.mode === 'solo' && state.match.leader === 1) later(botTakeCall, 900);
 }
 
 function botTakeCall() {
-  if (!state.match || state.match.phase !== 'call') return;
+  if (!state.match || state.match.mode !== 'solo' || state.match.phase !== 'call') return;
   if (state.match.leader !== 1) return;
   const match = state.match;
   const key = botCall(match);
@@ -169,7 +170,7 @@ function doReveal() {
     state.ui.busy = false;
     refreshCommitter();
     render();
-    if (state.match.leader === 1) later(botTakeCall, 900);
+    if (state.match.mode === 'solo' && state.match.leader === 1) later(botTakeCall, 900);
   }, 2500);
 }
 
@@ -224,16 +225,12 @@ function afterCommit(committer) {
 
 function showPacks() {
   state.screen = 'pack';
+  state.result = false;
   state.packOpened = null;
   render();
 }
 
 function openPackNow() {
-  if (state.packOpened && state.collection.packs > 0) {
-    state.packOpened = null;
-    render();
-    return;
-  }
   if (state.collection.packs <= 0) return;
   state.packOpened = openAtlasPack(state.collection, Date.now());
   sound.pack();
@@ -243,6 +240,7 @@ function openPackNow() {
 
 function showCollection() {
   state.screen = 'collection';
+  state.result = false;
   render();
 }
 
@@ -429,6 +427,7 @@ async function runShot(name) {
   }
   render();
   if (name === 'victory') effects.burst(110);
+  effects.freeze(name === 'victory' ? 44 : 1);
   await waitForPaint();
   await new Promise((resolve) => setTimeout(resolve, name === 'victory' ? 650 : 120));
   window.__shotReady = true;

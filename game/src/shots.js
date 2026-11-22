@@ -29,6 +29,7 @@ function duelScene() {
   match.players[0].score = 3;
   match.players[1].score = 2;
   match.players[0].streak = 2;
+  match.players[0].run = 2;
   fillHand(match, 0, ['taj', 'eiffel', 'machu']);
   fillHand(match, 1, ['colosseum', 'wall', 'liberty']);
   match.committed = [null, null];
@@ -55,6 +56,7 @@ function winScene() {
   match.players[0].score = 7;
   match.players[1].score = 4;
   match.players[0].bestStreak = 3;
+  match.players[0].run = 3;
   match.over = true;
   match.phase = 'over';
   match.winner = 0;
@@ -72,6 +74,7 @@ function lossScene() {
   match.players[0].score = 5;
   match.players[1].score = 7;
   match.players[1].bestStreak = 3;
+  match.players[1].run = 3;
   match.over = true;
   match.phase = 'over';
   match.winner = 1;
