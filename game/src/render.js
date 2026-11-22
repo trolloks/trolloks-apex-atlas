@@ -291,7 +291,7 @@ export function renderMatch(root, match, ui) {
     <div class="hand-area ${match.mode === 'local' ? 'local' : ''}">
       <div class="hand-meta">
         <div class="eyebrow">${match.mode === 'local' ? 'Duelists&rsquo; hands' : 'Your hand'}</div>
-        <div class="hand-note">${you.hand.length + rival.hand.length} cards at the table</div>
+        <div class="hand-note">Your deck ${you.draw.length + you.hand.length} &middot; Regent ${rival.draw.length + rival.hand.length}</div>
       </div>
       ${handHtml(match, 0, ui)}
       <div class="hand-controls">
@@ -413,7 +413,7 @@ export function renderCardModal(deck, card, credit) {
 export function renderHelp() {
   return `
     <h2>How to duel</h2>
-    <p>Apex Atlas is a card duel of real-world facts. You and your rival each hold three cards from the same deck; the first to <b>7 points</b> wins.</p>
+    <p>Apex Atlas is a card duel of real-world facts. You and your rival each hold four cards from the same deck; the first to <b>7 points</b> wins.</p>
     <ol>
       <li><b>Call the stat.</b> The leader chooses one of the deck's five stats &mdash; mass, height, moons, whatever the deck offers.</li>
       <li><b>Commit a card.</b> Both duelists choose a card in secret. The card with the higher value in the called stat takes the trick and one point.</li>

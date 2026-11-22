@@ -6,6 +6,7 @@ import { DECKS } from './decks.js';
 import { createRng, shuffle } from './rng.js';
 
 export const TARGET_POINTS = 7;
+export const HAND_SIZE = 4;
 export const CHARGE_BONUS = 1.15;
 
 export function statRange(deck, key) {
@@ -66,7 +67,7 @@ export function newMatch({ deckId, unlockedIds, mode = 'solo', difficulty = 'ade
 }
 
 export function drawToHand(match, player) {
-  while (player.hand.length < 3) {
+  while (player.hand.length < HAND_SIZE) {
     if (!player.draw.length) {
       if (!player.discard.length) break;
       player.draw = shuffle(player.discard.splice(0), match.random);

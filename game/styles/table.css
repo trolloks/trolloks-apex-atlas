@@ -87,7 +87,7 @@
 
 /* ---------- hands ---------- */
 .hand-area {
-  display: grid; grid-template-columns: auto minmax(0, 1fr) 190px minmax(0, 0.72fr);
+  display: grid; grid-template-columns: auto minmax(0, 1fr) 190px 250px;
   gap: 12px; align-items: end; padding: 0 2px;
 }
 .hand-meta { align-self: stretch; display: flex; flex-direction: column; justify-content: flex-end; gap: 5px; padding-bottom: 4px; }
@@ -95,8 +95,8 @@
 .hand-meta .hand-note { font-size: 9px; color: var(--muted); letter-spacing: 0.1em; text-transform: uppercase; }
 .hand-cards { display: flex; gap: 9px; align-items: flex-end; justify-content: flex-start; min-height: 0; }
 .hand-cards.right { justify-content: flex-end; align-items: flex-end; }
-.hand-cards .card { --card-w: 150px; }
-.hand-cards.opponent .card-back { --card-w: 58px; }
+.hand-cards .card { --card-w: 140px; }
+.hand-cards.opponent .card-back { --card-w: 54px; }
 .hand-cards.opponent .card { --card-w: 112px; }
 .hand-cards.opponent .card.mini { height: 168px; }
 .hand-controls { display: flex; flex-direction: column; gap: 7px; align-items: stretch; padding-bottom: 3px; }
@@ -131,4 +131,4 @@
 }
 
 #screen-match .hand-area.local { grid-template-columns: auto minmax(0, 1fr) 178px minmax(0, 1fr); }
-#screen-match .hand-area.local .hand-cards .card { --card-w: 128px; }
+#screen-match .hand-area.local .hand-cards .card { --card-w: 118px; }

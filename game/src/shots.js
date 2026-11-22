@@ -30,19 +30,21 @@ function duelScene() {
   match.players[1].score = 2;
   match.players[0].streak = 2;
   match.players[0].run = 2;
-  fillHand(match, 0, ['taj', 'eiffel', 'machu']);
-  fillHand(match, 1, ['colosseum', 'wall', 'liberty']);
+  fillHand(match, 0, ['taj', 'eiffel', 'machu', 'petra']);
+  fillHand(match, 1, ['colosseum', 'wall', 'liberty', 'pyramid']);
   match.committed = [null, null];
-  match.players[0].hand = ['taj', 'eiffel', 'machu'];
-  match.players[1].hand = ['colosseum', 'wall', 'liberty'];
+  match.players[0].hand = ['taj', 'eiffel', 'machu', 'petra'];
+  match.players[1].hand = ['colosseum', 'wall', 'liberty', 'pyramid'];
   callStat(match, 'height');
   commitCard(match, 0, 'taj', false);
   commitCard(match, 1, 'colosseum', true);
   match.players[0].score = 3;
   match.players[1].score = 2;
   reveal(match);
-  fillHand(match, 0, ['eiffel', 'machu']);
-  fillHand(match, 1, ['wall', 'liberty']);
+  match.players[0].hand = ['eiffel', 'machu', 'wall', 'liberty'];
+  match.players[1].hand = ['pyramid', 'petra', 'eiffel', 'machu'];
+  match.players[0].draw = ['taj', 'colosseum', 'pyramid', 'petra'];
+  match.players[1].draw = ['wall', 'liberty', 'taj', 'colosseum'];
   match.log = [
     'You call HEIGHT. The Regent commits without a word.',
     'You take the trick, 73 m to 55.2 m. The Taj stands tall.',
@@ -62,8 +64,8 @@ function winScene() {
   match.winner = 0;
   match.stat = 'mass';
   match.committed = [null, null];
-  fillHand(match, 0, ['blue-whale', 'elephant', 'cheetah']);
-  fillHand(match, 1, ['crocodile', 'python', 'ostrich']);
+  fillHand(match, 0, ['blue-whale', 'elephant', 'cheetah', 'grizzly']);
+  fillHand(match, 1, ['crocodile', 'python', 'ostrich', 'peregrine']);
   match.log = ['The blue whale outweighs the court. The Regent concedes.'];
   return { match, reward: 2, screen: 'result' };
 }
@@ -79,8 +81,8 @@ function lossScene() {
   match.phase = 'over';
   match.winner = 1;
   match.stat = 'moons';
-  fillHand(match, 0, ['earth', 'mars', 'mercury']);
-  fillHand(match, 1, ['saturn', 'jupiter', 'neptune']);
+  fillHand(match, 0, ['earth', 'mars', 'mercury', 'venus']);
+  fillHand(match, 1, ['saturn', 'jupiter', 'neptune', 'uranus']);
   match.log = ['Saturn\u2019s swarm of moons seals the atlas. The Regent bows.'];
   return { match, reward: 1, screen: 'result' };
 }

@@ -271,3 +271,10 @@ body::before {
   .deck-rail { margin: 12px 0 10px; }
   .mode-panel { margin-bottom: 8px; }
 }
+
+.btn.primary:disabled {
+  background: rgba(217, 164, 65, 0.14);
+  border-color: var(--brass-soft);
+  color: rgba(242, 228, 200, 0.45);
+  box-shadow: none;
+}
