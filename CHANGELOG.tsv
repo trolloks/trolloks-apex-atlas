@@ -5,3 +5,4 @@ r2	2026-11-22T19:51Z	3f8af2d	01a204d0-ae7c-751f-b3ce-b069b3163442	Bigger duel ca
 r3	2026-11-22T20:10Z	d98f3e2	01a204d2-b426-73a0-a077-2474e758a2c0	Cover is now the duel table; title moves to the second screenshot
 r4	2026-11-22T20:05Z	pending	pending	Four-card hands, deck counts, no-overlap hand layout, inactive commit styling
 r5	2026-11-22T20:45Z	ecf9737	01a204e6-0f76-76ca-b17d-78f88aac5c53	Local hot-seat hides the idle hand, scouted cards inspectable, immediate repaint at reveal
+r6	2026-11-22T21:10Z	pending	pending	Alternating stat call each trick; balanced matches; help text updated

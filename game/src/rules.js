@@ -175,8 +175,8 @@ export function finishTrick(match) {
     if (top >= 0) say(match, `${match.players[top].name} wins the duel, ${match.players[top].score} to ${match.players[1 - top].score}.`);
     return;
   }
-  const winner = match.result?.winner;
-  if (winner >= 0) match.leader = winner;
+  // The call alternates: both duelists get to steer a trick, and a hot hand cannot lock the lead.
+  match.leader = 1 - match.leader;
   match.committed = [null, null];
   match.stat = null;
   match.result = null;

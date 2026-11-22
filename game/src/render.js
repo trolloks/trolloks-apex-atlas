@@ -431,7 +431,7 @@ export function renderHelp() {
     <h2>How to duel</h2>
     <p>Apex Atlas is a card duel of real-world facts. You and your rival each hold four cards from the same deck; the first to <b>7 points</b> wins.</p>
     <ol>
-      <li><b>Call the stat.</b> The leader chooses one of the deck's five stats &mdash; mass, height, moons, whatever the deck offers.</li>
+      <li><b>Call the stat.</b> The call alternates each trick; the leader chooses one of the deck's five stats &mdash; mass, height, moons, whatever the deck offers.</li>
       <li><b>Commit a card.</b> Both duelists choose a card in secret. The card with the higher value in the called stat takes the trick and one point.</li>
       <li><b>Burn a charge.</b> Each duelist has two charges. Arm one before you commit for +15% to the called stat &mdash; a bluff or a rescue.</li>
       <li><b>Ride momentum.</b> Three tricks in a row earns a bonus point. A dead heat scores nothing and keeps the call.</li>
