@@ -91,7 +91,7 @@ export function cardHtml(deck, card, opts = {}) {
         <div class="card-name">${esc(card.name)}</div>
         <div class="card-latin">${esc(card.latin)}</div>
       </div>
-      <div class="card-trait" title="${esc(TRAITS[traitOf(card)].text)}"><b>${esc(TRAITS[traitOf(card)].name)}</b> ${esc(TRAITS[traitOf(card)].short)}</div>
+      <div class="card-trait" title="${esc(TRAITS[traitOf(card)].text)}"><span class="crest-label">${esc(CRESTS[crestOf(deck, card)].name)}</span> &middot; <b>${esc(TRAITS[traitOf(card)].name)}</b><span class="trait-text"> ${esc(TRAITS[traitOf(card)].short)}</span></div>
       <ul class="card-stats">${statsHtml(deck, card, opts)}</ul>
     </div>
     <div class="card-emblem">${emblem(deck.emblem)}</div>
