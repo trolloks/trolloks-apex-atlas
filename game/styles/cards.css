@@ -124,3 +124,36 @@
 /* little house / deck emblem inside badges */
 .emblem-wrap { display: inline-grid; place-items: center; }
 .emblem-wrap svg { width: 100%; height: 100%; }
+
+/* Parchment card face: dark ink on aged paper reads at thumbnail size. */
+.card {
+  background: linear-gradient(170deg, #f8f1e0, #e7d9bd 72%, #ddcba8);
+  border-color: #b98a4a;
+  color: #241b10;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.5), inset 0 0 0 1px rgba(255, 250, 238, 0.5);
+}
+.card::after { border-color: color-mix(in srgb, var(--accent) 52%, #8a6430); }
+.card-name { color: #241b10; }
+.card-latin { color: #7a6544; }
+.card-heading { border-bottom-color: rgba(70, 48, 18, 0.22); }
+.stat-label { color: #7a6544; }
+.stat-value { color: #241b10; }
+.stat + .stat { border-top-color: rgba(70, 48, 18, 0.14); }
+.card-trait { color: #6b5636; }
+.card-trait b { color: var(--accent); }
+.card-trait .crest-label { color: var(--crest); }
+.card-emblem { color: var(--accent); opacity: 0.18; }
+.card-photo::after { background: linear-gradient(180deg, rgba(248, 241, 224, 0) 58%, rgba(248, 241, 224, 0.96) 100%); }
+.card-photo img { filter: saturate(1.02) contrast(1.03) brightness(1.02); }
+.stat.called { background: color-mix(in srgb, var(--accent) 22%, transparent); }
+.stat.called .stat-label { color: #241b10; }
+.stat.called .stat-value { color: #6b3f00; }
+.stat.boosted .stat-value { color: #0d5f88; }
+.stat.omen .stat-value { color: var(--crest); text-shadow: none; }
+.card.on-table.winner { box-shadow: 0 0 0 3px var(--good), 0 18px 40px rgba(0, 0, 0, 0.55); }
+.card.playable:hover, .card.playable:focus-visible { box-shadow: 0 20px 34px rgba(0, 0, 0, 0.55), 0 0 0 2px var(--brass); }
+.card.playable.selected { box-shadow: 0 0 0 3px var(--brass), 0 22px 38px rgba(0, 0, 0, 0.6); }
+.card { border-left-color: var(--crest); }
+.stat.omen .stat-value { color: color-mix(in srgb, var(--crest) 42%, #241b10); }
+.card-trait .crest-label { color: color-mix(in srgb, var(--crest) 45%, #241b10); }
+.card-trait b { color: color-mix(in srgb, var(--accent) 50%, #241b10); }
