@@ -19,15 +19,15 @@ function baseMatch(deckId, seed = 11) {
     mode: 'solo',
     difficulty: 'master',
     seed,
-    target: 7,
+    life: 30,
   });
 }
 
 function duelScene() {
   const match = baseMatch('wonders', 23);
   match.trick = 6;
-  match.players[0].score = 3;
-  match.players[1].score = 2;
+  match.players[0].life = 22;
+  match.players[1].life = 18;
   match.players[0].streak = 2;
   match.players[0].run = 2;
   fillHand(match, 0, ['eiffel', 'taj', 'machu', 'petra']);
@@ -39,8 +39,6 @@ function duelScene() {
   callStat(match, 'height');
   commitCard(match, 0, 'eiffel', true);
   commitCard(match, 1, 'colosseum', false);
-  match.players[0].score = 3;
-  match.players[1].score = 2;
   reveal(match);
   match.players[0].hand = ['taj', 'machu', 'wall', 'liberty'];
   match.players[1].hand = ['pyramid', 'petra', 'eiffel', 'machu'];
@@ -48,7 +46,7 @@ function duelScene() {
   match.players[1].draw = ['wall', 'liberty', 'taj', 'colosseum'];
   match.log = [
     'You call HEIGHT. The Regent commits without a word.',
-    'You take the trick, 417.5 m to 48 m. The Eiffel stands tall.',
+    'You take the trick, 417.5 m to 48 m: 10 damage. The Eiffel stands tall.',
   ];
   return { match, ui: {}, screen: 'match' };
 }
@@ -57,8 +55,8 @@ function winScene() {
   const match = baseMatch('beasts', 31);
   match.trick = 9;
   match.omen = 'moon';
-  match.players[0].score = 7;
-  match.players[1].score = 4;
+  match.players[0].life = 15;
+  match.players[1].life = 0;
   match.players[0].bestStreak = 3;
   match.players[0].run = 3;
   match.over = true;
@@ -74,6 +72,7 @@ function winScene() {
     ],
     winner: 0,
     omen: 'moon',
+    damage: 8,
   };
   match.players[0].hand = ['elephant', 'cheetah', 'grizzly', 'peregrine'];
   match.players[1].hand = ['python', 'ostrich', 'elephant', 'cheetah'];
@@ -87,8 +86,8 @@ function lossScene() {
   const match = baseMatch('worlds', 43);
   match.trick = 10;
   match.omen = 'star';
-  match.players[0].score = 5;
-  match.players[1].score = 7;
+  match.players[0].life = 0;
+  match.players[1].life = 18;
   match.players[1].bestStreak = 3;
   match.players[1].run = 3;
   match.over = true;
@@ -104,6 +103,7 @@ function lossScene() {
     ],
     winner: 1,
     omen: 'star',
+    damage: 8,
   };
   match.players[0].hand = ['mars', 'mercury', 'venus', 'jupiter'];
   match.players[1].hand = ['uranus', 'neptune', 'earth', 'mars'];

@@ -14,6 +14,9 @@
 .crest svg { width: 20px; height: 20px; }
 .who { font-family: var(--serif); font-size: 14px; letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .who small { display: block; font-family: var(--sans); font-size: 8px; letter-spacing: 0.18em; color: var(--muted); text-transform: uppercase; }
+.life-bar { width: 100%; height: 8px; margin-top: 5px; border-radius: 2px; overflow: hidden; background: rgba(242, 228, 200, 0.14); border: 1px solid rgba(242, 228, 200, 0.09); }
+.life-bar span { display: block; height: 100%; background: linear-gradient(90deg, #7fc98a, #d9a441); transition: width 300ms ease; }
+.life-bar.right span { background: linear-gradient(90deg, #e08a3c, #c9604f); }
 .pips { display: flex; gap: 3px; margin-top: 4px; }
 .pips.right { justify-content: flex-end; }
 .pip { width: 13px; height: 5px; border-radius: 1px; background: rgba(242, 228, 200, 0.14); border: 1px solid rgba(242, 228, 200, 0.09); }

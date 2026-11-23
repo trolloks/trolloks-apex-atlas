@@ -5,7 +5,7 @@
 import { CRESTS, CREST_KEYS, DECKS, TRAITS, crestOf, traitOf } from './decks.js';
 import { createRng, shuffle } from './rng.js';
 
-export const TARGET_POINTS = 7;
+export const START_LIFE = 30;
 export const HAND_SIZE = 4;
 export const TRICK_ENERGY = 3;
 export const CHARGE_BONUS = 1.15;
@@ -23,7 +23,7 @@ function buildPile(deck, unlockedIds, rng) {
   return shuffle(pile, rng).slice(0, 12);
 }
 
-export function newMatch({ deckId, unlockedIds, mode = 'solo', difficulty = 'adept', seed = Date.now(), target = TARGET_POINTS }) {
+export function newMatch({ deckId, unlockedIds, mode = 'solo', difficulty = 'adept', seed = Date.now(), life = START_LIFE }) {
   const deck = DECKS[deckId];
   const rng = createRng(seed);
   const names = mode === 'local' ? ['DUELIST I', 'DUELIST II'] : ['YOU', 'THE REGENT'];
@@ -34,7 +34,7 @@ export function newMatch({ deckId, unlockedIds, mode = 'solo', difficulty = 'ade
     hand: [],
     draw: buildPile(deck, unlockedIds, rng),
     discard: [],
-    score: 0,
+    life,
     streak: 0,
     run: 0,
     bestStreak: 0,
@@ -48,7 +48,7 @@ export function newMatch({ deckId, unlockedIds, mode = 'solo', difficulty = 'ade
     deckId,
     mode,
     difficulty,
-    target,
+    life,
     random: rng,
     seed,
     players,
@@ -65,7 +65,7 @@ export function newMatch({ deckId, unlockedIds, mode = 'solo', difficulty = 'ade
     winner: null,
   };
   for (const player of players) drawToHand(match, player);
-  say(match, `${names[0]} opens the atlas. First to ${target} points takes the duel.`);
+  say(match, `${names[0]} opens the atlas. Break ${life} Resolve to win the duel.`);
   return match;
 }
 
@@ -163,7 +163,6 @@ export function reveal(match) {
   } else {
     const player = match.players[winner];
     const other = match.players[1 - winner];
-    player.score += 1;
     player.run += 1;
     player.bestStreak = Math.max(player.bestStreak, player.run);
     const loserCard = sides[1 - winner].card;
@@ -177,15 +176,24 @@ export function reveal(match) {
       other.charges += 1;
       say(match, `${loserCard.name} is swift: its duelist recovers a charge.`);
     }
+    let damage = 4;
+    const winnerValue = Math.abs(sides[winner].value);
+    const loserValue = Math.abs(sides[1 - winner].value);
+    if (winnerValue > 0) {
+      if (loserValue === 0 || winnerValue >= loserValue * 2) damage += 2;
+      if (loserValue === 0 || winnerValue >= loserValue * 4) damage += 2;
+    }
     other.streak = 0;
     other.run = 0;
-    say(match, `${player.name} takes the trick, ${a.value} to ${b.value}.${tiebreak === 'apex' ? ' Apex breaks the tie.' : ''}`);
     if (player.streak === 3) {
-      player.score += 1;
+      damage += 2;
       player.streak = 0;
       match.result.bonus = true;
-      say(match, `Three in a row: ${player.name} claims a momentum point.`);
+      say(match, `Three in a row: ${player.name} adds momentum damage.`);
     }
+    other.life = Math.max(0, other.life - damage);
+    match.result.damage = damage;
+    say(match, `${player.name} takes the trick, ${a.value} to ${b.value}: ${damage} damage.${tiebreak === 'apex' ? ' Apex breaks the tie.' : ''}`);
   }
   match.phase = 'resolve';
   return match.result;
@@ -201,12 +209,12 @@ export function finishTrick(match) {
     player.energy = TRICK_ENERGY;
     drawToHand(match, player);
   }
-  if (match.players.some((player) => player.score >= match.target)) {
+  if (match.players.some((player) => player.life <= 0)) {
     match.over = true;
     match.phase = 'over';
-    const top = match.players[0].score === match.players[1].score ? -1 : match.players[0].score > match.players[1].score ? 0 : 1;
+    const top = match.players[0].life > 0 ? 0 : 1;
     match.winner = top;
-    if (top >= 0) say(match, `${match.players[top].name} wins the duel, ${match.players[top].score} to ${match.players[1 - top].score}.`);
+    say(match, `${match.players[top].name} wins the duel, ${match.players[1 - top].name}'s Resolve is broken.`);
     return;
   }
   // The call alternates: both duelists get to steer a trick, and a hot hand cannot lock the lead.

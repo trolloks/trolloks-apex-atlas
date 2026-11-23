@@ -58,7 +58,7 @@ export function botCommit(match) {
   }
   const chosen = ranked[0];
   const swing = chosen.value < (match.difficulty === 'master' ? 0.45 : 0.3);
-  const pressure = match.players[0].score >= match.target - 2;
+  const pressure = bot.life <= 6;
   const canCharge = bot.charges > 0 && bot.energy >= chosen.card.tier + 1;
   const wantsCharge = canCharge && (swing || (pressure && match.difficulty === 'master' && match.random() > 0.5));
   return { cardId: chosen.card.id, charge: wantsCharge };

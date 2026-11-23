@@ -7,7 +7,7 @@
 An original card duel about the real world. Two duelists share one deck of real animals,
 wonders or worlds; each card carries five comparable numbers; the leader calls a stat and
 both commit a card. Higher takes the trick, three in a row earns momentum, and the first to
-seven points wins. Two-player local and three bot temperaments, plus booster packs that
+break 30 Resolve wins. Two-player local and three bot temperaments, plus booster packs that
 unlock more of the atlas.
 
 Built for [make.fun's "Make the best card game" bounty](https://make.fun/bounty/best-card-game-20261122-1826). Everything runs offline from
@@ -29,7 +29,7 @@ Then open <http://localhost:8080>.
   denies the winner momentum.
 - Each trick reveals an **omen** crest; its cards add 10% to the called stat.
 - Two charges per duel add 15%, one scouting run opens the Regent's hand, and
-  three tricks in a row earn a momentum point. First to seven points wins.
+  three tricks in a row add +2 damage. First to break 30 Resolve wins.
 - Booster packs unlock the rest of the atlas across all three decks.
 
 ## The entry

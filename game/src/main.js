@@ -3,7 +3,7 @@
 
 import { CREDITS, DECKS } from './decks.js';
 import { awardMatch, loadCollection, openPack as openAtlasPack } from './collection.js';
-import { newMatch, callStat, commitCard, reveal, finishTrick, scoutHand, TARGET_POINTS } from './rules.js';
+import { newMatch, callStat, commitCard, reveal, finishTrick, scoutHand } from './rules.js';
 import { botCall, botCommit, botFlavor } from './bots.js';
 import { createEffects } from './effects.js';
 import { isMuted, sound, toggleMute } from './audio.js';
@@ -122,7 +122,6 @@ function startMatch() {
     mode: state.mode,
     difficulty: state.difficulty,
     seed: (Date.now() ^ Math.floor(Math.random() * 0xffff)) >>> 0,
-    target: TARGET_POINTS,
   });
   state.screen = 'match';
   refreshCommitter();
@@ -185,10 +184,10 @@ function endMatch() {
   if (won) {
     sound.win();
     effects.burst(150);
-    announce(`Victory, ${match.players[0].score} to ${match.players[1].score}. ${state.resultReward} packs earned.`);
+    announce(`Victory, ${match.players[0].life} Resolve left. ${state.resultReward} packs earned.`);
   } else {
     sound.lose();
-    announce(`Defeat, ${match.players[0].score} to ${match.players[1].score}. ${state.resultReward} pack earned.`);
+    announce(`Defeat, the Regent had ${match.players[1].life} Resolve left. ${state.resultReward} pack earned.`);
   }
 }
 

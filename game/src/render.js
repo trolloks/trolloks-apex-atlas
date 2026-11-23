@@ -108,8 +108,9 @@ function miniCardHtml(deck, card, locked) {
   </button>`;
 }
 
-function scorePips(score, target, side) {
-  return `<div class="pips ${side}">${Array.from({ length: target }, (_, i) => `<span class="pip${i < score ? ' on' : ''}"></span>`).join('')}</div>`;
+function lifeBar(life, max, side) {
+  const pct = Math.max(0, Math.min(100, (life / Math.max(1, max)) * 100));
+  return `<div class="life-bar ${side}"><span style="width:${pct}%"></span></div>`;
 }
 
 /* ---------------- title ---------------- */
@@ -263,10 +264,10 @@ export function renderMatch(root, match, ui) {
     : index === 0 ? 'You' : 'The Regent';
   const trickLine = result
     ? result.winner === 0
-      ? { text: result.tiebreak === 'apex' ? 'Apex breaks the tie' : result.bonus ? `${winnerName(0)} take${match.mode === 'local' ? 's' : ''} it + momentum` : `${winnerName(0)} take${match.mode === 'local' ? 's' : ''} the trick`, cls: 'win' }
+      ? { text: `${winnerName(0)} deal${match.mode === 'local' ? 's' : ''} ${result.damage} damage`, cls: 'win' }
       : result.winner === 1
-        ? { text: result.tiebreak === 'apex' ? 'Apex breaks the tie' : result.bonus ? `${winnerName(1)} + momentum` : `${winnerName(1)} takes the trick`, cls: 'loss' }
-        : { text: 'Dead heat: no point', cls: 'tie' }
+        ? { text: `${winnerName(1)} deals ${result.damage} damage`, cls: 'loss' }
+        : { text: 'Dead heat: no damage', cls: 'tie' }
     : { text: match.phase === 'call' ? `${leader.name} calls the stat` : 'Cards are set', cls: '' };
   const busyNote = ui.busy ? 'The Regent is thinking…' : '';
   const hint = match.phase === 'call'
@@ -280,18 +281,18 @@ export function renderMatch(root, match, ui) {
     <header class="hud">
       <div class="score-panel left">
         <span class="crest">${icon('star')}</span>
-        <div><div class="who">${esc(you.name)}<small>${esc(match.deck.name)}</small></div>${scorePips(you.score, match.target, '')}</div>
-        <div class="score-num">${you.score}</div>
+        <div><div class="who">${esc(you.name)}<small>${esc(match.deck.name)}</small></div>${lifeBar(you.life, match.life, '')}</div>
+        <div class="score-num">${you.life}</div>
       </div>
       <div class="trick-center">
         <div class="eyebrow">Trick ${match.trick}</div>
-        <div class="target">First to ${match.target}</div>
+        <div class="target">Break ${match.life}</div>
         <div class="streak">${you.run ? `${you.name} &times;${you.run} streak` : rival.run ? `${rival.name} &times;${rival.run} streak` : ''}</div>
       </div>
       <div class="score-panel right">
         <span class="crest">${emblem(match.deck.emblem)}</span>
-        <div><div class="who">${esc(rival.name)}<small>${match.mode === 'solo' ? esc(match.difficulty) + ' bot' : 'second duelist'}</small></div>${scorePips(rival.score, match.target, 'right')}</div>
-        <div class="score-num">${rival.score}</div>
+        <div><div class="who">${esc(rival.name)}<small>${match.mode === 'solo' ? esc(match.difficulty) + ' bot' : 'second duelist'}</small></div>${lifeBar(rival.life, match.life, 'right')}</div>
+        <div class="score-num">${rival.life}</div>
       </div>
     </header>
     <div class="call-bar">
@@ -403,11 +404,11 @@ export function renderResult(root, match, reward) {
     <div class="result-panel">
       <div class="result-kicker">${won ? 'The atlas is yours' : 'The atlas closes'}</div>
       <div class="result-title ${won ? 'win' : 'loss'}">${won ? 'Victory' : 'Defeat'}</div>
-      <div class="result-score">${match.players[0].score} &ndash; ${match.players[1].score}</div>
+      <div class="result-score">${match.players[0].life} &ndash; ${match.players[1].life}</div>
       <div class="result-stats">
         <div class="result-stat"><b>${match.trick}</b><span>Tricks</span></div>
         <div class="result-stat"><b>${match.players[0].bestStreak}</b><span>Best streak</span></div>
-        <div class="result-stat"><b>${won ? 'Won' : 'Lost'}</b><span>${esc(match.deck.short)}</span></div>
+        <div class="result-stat"><b>${match.players[0].life}</b><span>Life left</span></div>
       </div>
       <div class="result-pack">${reward === 1 ? 'You earned 1 booster pack' : `You earned ${reward} booster packs`}</div>
       <div class="btn-row">
@@ -441,13 +442,13 @@ export function renderCardModal(deck, card, credit) {
 export function renderHelp() {
   return `
     <h2>How to duel</h2>
-    <p>Apex Atlas is a card duel of real-world facts. You and your rival each hold four cards from the same deck; the first to <b>7 points</b> wins.</p>
+    <p>Apex Atlas is a card duel of real-world facts. You and your rival each hold four cards from the same deck; each starts with <b>30 Resolve</b>, and the first to break the other to zero wins.</p>
     <ol>
       <li><b>Call the stat.</b> The call alternates each trick; the leader chooses one of the deck's five stats &mdash; mass, height, moons, whatever the deck offers.</li>
       <li><b>Commit a card.</b> Both duelists choose a card in secret. The card with the higher value in the called stat takes the trick and one point.</li>
       <li><b>Spend energy.</b> Each trick gives 3 energy. A card costs its tier (1&ndash;3); a charge costs 1 more. A tier-3 card leaves nothing for a charge.</li>
       <li><b>Burn a charge.</b> Each duelist has two charges. Arm one before you commit for +15% to the called stat &mdash; a bluff or a rescue.</li>
-      <li><b>Ride momentum.</b> Three tricks in a row earns a bonus point.</li>
+      <li><b>Ride momentum.</b> Three tricks in a row adds +2 damage. A trick win deals 4, +2 for double the stat and +2 more for quadruple.</li>
       <li><b>Know the traits.</b> <b>Apex</b> wins a tied stat. <b>Swift</b> recovers a charge when it loses. <b>Stalwart</b> denies the winner momentum.</li>
       <li><b>Watch the omen.</b> Each trick names a crest &mdash; Sun, Moon or Star. A committed card of that crest adds 10% to the called stat.</li>
       <li><b>Scout once.</b> In solo play, spend your one scouting run to see the Regent's hand for a trick.</li>
