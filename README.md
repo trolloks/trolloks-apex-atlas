@@ -28,8 +28,10 @@ Then open <http://localhost:8080>.
   **Apex** wins ties, **Swift** refunds a charge when it loses, **Stalwart**
   denies the winner momentum.
 - Each trick reveals an **omen** crest; its cards add 10% to the called stat.
+- Three energy a trick: a card costs its tier (1-3) and a charge costs one more.
 - Two charges per duel add 15%, one scouting run opens the Regent's hand, and
-  three tricks in a row add +2 damage. First to break 30 Resolve wins.
+  three tricks in a row add +2 damage. One Gambit can stake a trick for +2 damage
+  (or +2 taken). First to break 30 Resolve wins.
 - Booster packs unlock the rest of the atlas across all three decks.
 
 ## The entry
