@@ -65,6 +65,7 @@
 .side-label { font-size: 8.5px; letter-spacing: 0.22em; color: var(--muted); text-transform: uppercase; }
 .slot { display: grid; place-items: center; min-height: 0; }
 .duel-card-wrap { position: relative; display: inline-block; }
+.gambit-badge { position: absolute; bottom: -10px; left: -8px; z-index: 4; font-size: 8px; letter-spacing: 0.18em; font-weight: 700; color: #ffe3a8; background: linear-gradient(180deg, #9c2f22, #5a160e); border: 1px solid #e08a3c; padding: 3px 6px; border-radius: 2px; transform: rotate(-4deg); box-shadow: 0 3px 10px rgba(0,0,0,.45); }
 .damage-splash { position: absolute; top: -12px; right: -16px; z-index: 4; font-family: var(--serif); font-size: 38px; font-weight: 700; color: #ff6b57; text-shadow: 0 0 18px rgba(255, 60, 30, 0.65), 0 2px 0 #2a0703; transform: rotate(7deg); pointer-events: none; animation: damagePop 420ms cubic-bezier(.2,.9,.3,1.4) both; }
 @keyframes damagePop { from { opacity: 0; transform: scale(0.4) rotate(7deg); } to { opacity: 1; transform: scale(1) rotate(7deg); } }
 .slot .empty-slot {
@@ -121,6 +122,8 @@
 }
 .toggle:hover { border-color: #7fc9ee; }
 .toggle.on { background: rgba(95, 180, 217, 0.26); border-color: #9fe0ff; color: #e7f8ff; }
+.toggle.gambit { border-color: rgba(201, 96, 79, 0.5); color: #f0a090; background: rgba(201, 96, 79, 0.08); }
+.toggle.gambit.on { background: rgba(201, 96, 79, 0.3); border-color: #e08a3c; color: #ffe3a8; }
 .toggle:disabled { opacity: 0.35; cursor: not-allowed; }
 .hand-cta { display: flex; flex-direction: column; gap: 6px; }
 .hand-cta .btn { width: 100%; }

@@ -37,7 +37,7 @@ function duelScene() {
   match.players[1].hand = ['colosseum', 'wall', 'liberty', 'pyramid'];
   match.omen = 'sun';
   callStat(match, 'height');
-  commitCard(match, 0, 'eiffel', true);
+  commitCard(match, 0, 'eiffel', true, true);
   commitCard(match, 1, 'colosseum', false);
   reveal(match);
   match.players[0].hand = ['taj', 'machu', 'wall', 'liberty'];
@@ -46,7 +46,7 @@ function duelScene() {
   match.players[1].draw = ['wall', 'liberty', 'taj', 'colosseum'];
   match.log = [
     'You call HEIGHT. The Regent commits without a word.',
-    'You take the trick, 417.5 m to 48 m: 10 damage. The Eiffel stands tall.',
+    'You take the trick, 417.5 m to 48 m: 12 damage. The Eiffel stands tall.',
   ];
   return { match, ui: {}, screen: 'match' };
 }
@@ -63,7 +63,7 @@ function winScene() {
   match.phase = 'over';
   match.winner = 0;
   match.stat = 'mass';
-  match.committed = [{ cardId: 'blue-whale', charge: false }, { cardId: 'crocodile', charge: true }];
+  match.committed = [{ cardId: 'blue-whale', charge: false, gambit: true }, { cardId: 'crocodile', charge: true, gambit: false }];
   match.result = {
     stat: { key: 'mass', label: 'Mass', unit: 'kg', icon: 'weight' },
     sides: [
@@ -72,7 +72,8 @@ function winScene() {
     ],
     winner: 0,
     omen: 'moon',
-    damage: 8,
+    damage: 10,
+    gambits: 1,
   };
   match.players[0].hand = ['elephant', 'cheetah', 'grizzly', 'peregrine'];
   match.players[1].hand = ['python', 'ostrich', 'elephant', 'cheetah'];
@@ -94,7 +95,7 @@ function lossScene() {
   match.phase = 'over';
   match.winner = 1;
   match.stat = 'moons';
-  match.committed = [{ cardId: 'earth', charge: false }, { cardId: 'saturn', charge: false }];
+  match.committed = [{ cardId: 'earth', charge: false, gambit: false }, { cardId: 'saturn', charge: false, gambit: true }];
   match.result = {
     stat: { key: 'moons', label: 'Moons', unit: 'known', icon: 'moon' },
     sides: [
@@ -103,7 +104,8 @@ function lossScene() {
     ],
     winner: 1,
     omen: 'star',
-    damage: 8,
+    damage: 10,
+    gambits: 1,
   };
   match.players[0].hand = ['mars', 'mercury', 'venus', 'jupiter'];
   match.players[1].hand = ['uranus', 'neptune', 'earth', 'mars'];

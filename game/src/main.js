@@ -43,7 +43,7 @@ const state = {
   mode: 'solo',
   difficulty: 'master',
   match: null,
-  ui: { selectedCard: null, chargeArmed: false, busy: false, committer: 0 },
+  ui: { selectedCard: null, chargeArmed: false, gambitArmed: false, busy: false, committer: 0 },
   muted: isMuted(),
   result: false,
   resultReward: 0,
@@ -114,7 +114,7 @@ function startMatch() {
   state.token += 1;
   state.result = false;
   state.packOpened = null;
-  state.ui = { selectedCard: null, chargeArmed: false, busy: false, committer: 0 };
+  state.ui = { selectedCard: null, chargeArmed: false, gambitArmed: false, busy: false, committer: 0 };
   const deck = DECKS[state.deckId];
   state.match = newMatch({
     deckId: state.deckId,
@@ -166,6 +166,7 @@ function doReveal() {
     }
     state.ui.selectedCard = null;
     state.ui.chargeArmed = false;
+    state.ui.gambitArmed = false;
     state.ui.busy = false;
     refreshCommitter();
     render();
@@ -209,7 +210,7 @@ function afterCommit(committer) {
       const bot = state.match.players[1];
       const choice = botCommit(state.match);
       if (!choice) return;
-      commitCard(state.match, 1, choice.cardId, choice.charge);
+      commitCard(state.match, 1, choice.cardId, choice.charge, choice.gambit);
       state.ui.busy = false;
       sound.place();
       refreshCommitter();
@@ -308,20 +309,26 @@ app.addEventListener('click', (event) => {
     if (state.match.mode === 'solo' && state.ui.committer !== 0) return;
     state.ui.selectedCard = el.dataset.cardId;
     state.ui.chargeArmed = false;
+    state.ui.gambitArmed = false;
     sound.select();
     render();
   } else if (action === 'toggle-charge') {
     state.ui.chargeArmed = !state.ui.chargeArmed;
     sound.select();
     render();
+  } else if (action === 'toggle-gambit') {
+    state.ui.gambitArmed = !state.ui.gambitArmed;
+    sound.select();
+    render();
   } else if (action === 'commit') {
     if (!state.match || !state.ui.selectedCard || state.match.phase !== 'commit') return;
     const committer = state.ui.committer;
     if (state.match.committed[committer] !== null) return;
-    const committed = commitCard(state.match, committer, state.ui.selectedCard, state.ui.chargeArmed);
+    const committed = commitCard(state.match, committer, state.ui.selectedCard, state.ui.chargeArmed, state.ui.gambitArmed);
     if (!committed) return;
     state.ui.selectedCard = null;
     state.ui.chargeArmed = false;
+    state.ui.gambitArmed = false;
     sound.place();
     afterCommit(committer);
   } else if (action === 'scout') {
@@ -390,6 +397,7 @@ document.addEventListener('keydown', (event) => {
     if (id) {
       state.ui.selectedCard = id;
       state.ui.chargeArmed = false;
+      state.ui.gambitArmed = false;
       sound.select();
       render();
     }
@@ -397,6 +405,9 @@ document.addEventListener('keydown', (event) => {
   }
   if (event.key === 'Enter' && state.ui.selectedCard) {
     screens.match.querySelector('[data-action="commit"]:not([disabled])')?.click();
+  }
+  if (event.key.toLowerCase() === 'g') {
+    screens.match.querySelector('[data-action="toggle-gambit"]:not([disabled])')?.click();
   }
   if (event.key.toLowerCase() === 'c') {
     screens.match.querySelector('[data-action="toggle-charge"]:not([disabled])')?.click();
@@ -431,12 +442,12 @@ async function runShot(name) {
     state.result = true;
     state.resultReward = scene.reward;
     state.screen = 'result';
-    state.ui = { selectedCard: null, chargeArmed: false, busy: false, committer: 0 };
+    state.ui = { selectedCard: null, chargeArmed: false, gambitArmed: false, busy: false, committer: 0 };
   } else {
     state.match = scene.match;
     state.screen = 'match';
     state.result = false;
-    state.ui = { selectedCard: null, chargeArmed: false, busy: false, committer: 0 };
+    state.ui = { selectedCard: null, chargeArmed: false, gambitArmed: false, busy: false, committer: 0 };
   }
   render();
   if (name === 'victory') effects.burst(110);

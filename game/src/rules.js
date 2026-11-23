@@ -40,6 +40,7 @@ export function newMatch({ deckId, unlockedIds, mode = 'solo', difficulty = 'ade
     bestStreak: 0,
     charges: 2,
     chargeUsed: false,
+    gambit: 1,
     energy: TRICK_ENERGY,
     scouted: false,
   }));
@@ -104,13 +105,14 @@ export function callStat(match, key) {
   return true;
 }
 
-export function commitCard(match, playerIndex, cardId, useCharge = false) {
+export function commitCard(match, playerIndex, cardId, useCharge = false, useGambit = false) {
   if (match.phase !== 'commit') return false;
   const player = match.players[playerIndex];
   const at = player.hand.indexOf(cardId);
   if (at === -1) return false;
   const card = cardOf(match, cardId);
   if (useCharge && player.charges <= 0) useCharge = false;
+  if (useGambit && player.gambit <= 0) useGambit = false;
   const cost = card.tier + (useCharge ? 1 : 0);
   if (cost > player.energy) return false;
   player.energy -= cost;
@@ -119,7 +121,8 @@ export function commitCard(match, playerIndex, cardId, useCharge = false) {
     player.charges -= 1;
     player.chargeUsed = true;
   }
-  match.committed[playerIndex] = { cardId, charge: useCharge };
+  if (useGambit) player.gambit -= 1;
+  match.committed[playerIndex] = { cardId, charge: useCharge, gambit: useGambit };
   if (match.committed.every(Boolean)) match.phase = 'reveal';
   return true;
 }
@@ -177,6 +180,12 @@ export function reveal(match) {
       say(match, `${loserCard.name} is swift: its duelist recovers a charge.`);
     }
     let damage = 4;
+    const gambits = match.committed.filter((commit) => commit?.gambit).length;
+    if (gambits > 0) {
+      damage += 2 * gambits;
+      match.result.gambits = gambits;
+      say(match, `${gambits === 1 ? 'A gambit' : 'Both gambits'} add${gambits === 1 ? 's' : ''} ${2 * gambits} damage.`);
+    }
     const winnerValue = Math.abs(sides[winner].value);
     const loserValue = Math.abs(sides[1 - winner].value);
     if (winnerValue > 0) {

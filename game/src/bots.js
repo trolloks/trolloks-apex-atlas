@@ -54,14 +54,16 @@ export function botCommit(match) {
   if (match.difficulty === 'apprentice') {
     const chosen = ranked[Math.floor(match.random() * ranked.length)] ?? ranked[0];
     const charge = bot.charges > 0 && bot.energy >= chosen.card.tier + 1 && match.random() > 0.9;
-    return { cardId: chosen.card.id, charge };
+    const gambit = bot.gambit > 0 && chosen.value > 0.65 && match.random() > 0.5;
+    return { cardId: chosen.card.id, charge, gambit };
   }
   const chosen = ranked[0];
   const swing = chosen.value < (match.difficulty === 'master' ? 0.45 : 0.3);
   const pressure = bot.life <= 6;
   const canCharge = bot.charges > 0 && bot.energy >= chosen.card.tier + 1;
   const wantsCharge = canCharge && (swing || (pressure && match.difficulty === 'master' && match.random() > 0.5));
-  return { cardId: chosen.card.id, charge: wantsCharge };
+  const wantsGambit = bot.gambit > 0 && (chosen.value > 0.6 || pressure) && match.random() > 0.4;
+  return { cardId: chosen.card.id, charge: wantsCharge, gambit: wantsGambit };
 }
 
 export function botFlavor(match) {

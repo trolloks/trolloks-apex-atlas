@@ -184,7 +184,8 @@ function slotHtml(match, index, ui) {
     const hit = match.result && match.result.winner === 1 - index && match.result.damage
       ? `<span class="damage-splash">-${match.result.damage}</span>`
       : '';
-    return `<div class="duel-card-wrap">${cardMarkup}${hit}</div>`;
+    const gambit = commit.gambit ? '<span class="gambit-badge">GAMBIT</span>' : '';
+    return `<div class="duel-card-wrap">${cardMarkup}${hit}${gambit}</div>`;
   }
   if (commit) return `<div class="card-back" aria-label="Card committed">${emblem(match.deck.emblem)}<span class="back-mark">SET</span></div>`;
   return `<div class="empty-slot">${match.phase === 'call' ? 'Call a stat' : 'Commit a card'}</div>`;
@@ -330,6 +331,7 @@ export function renderMatch(root, match, ui) {
         <div class="charge-row"><span>${esc(actor.name)} charges</span><span class="charge-pips">${[0, 1].map((i) => `<span class="charge-pip${i < actor.charges ? '' : ' spent'}">${icon('bolt')}</span>`).join('')}</span></div>
         <div class="energy-row"><span>Energy</span><span class="energy-pips">${[0, 1, 2].map((i) => `<span class="energy-pip${i < actor.energy ? '' : ' spent'}">${icon('bolt')}</span>`).join('')}</span></div>
         <button class="toggle ${ui.chargeArmed ? 'on' : ''}" data-action="toggle-charge" ${actor.charges > 0 && actor.energy > (match.deck.cards.find((c) => c.id === ui.selectedCard)?.tier ?? 9) && match.phase === 'commit' && ui.selectedCard ? '' : 'disabled'}>${ui.chargeArmed ? 'Charge armed +15%' : 'Arm a charge (+1 energy)'}</button>
+        <button class="toggle gambit ${ui.gambitArmed ? 'on' : ''}" data-action="toggle-gambit" ${actor.gambit > 0 && match.phase === 'commit' && ui.selectedCard && match.committed[ui.committer ?? 0] === null && !ui.busy ? '' : 'disabled'}>${ui.gambitArmed ? 'Gambit armed' : 'Gambit +2 / -2'}</button>
         <div class="hand-cta">
           <button class="btn primary small" data-action="commit" ${ui.selectedCard && match.phase === 'commit' && match.committed[ui.committer ?? 0] === null && !ui.busy ? '' : 'disabled'}>Commit card</button>
           <span class="hint">${esc(hint)}</span>
@@ -452,6 +454,7 @@ export function renderHelp() {
       <li><b>Commit a card.</b> Both duelists choose a card in secret. The card with the higher value in the called stat takes the trick and one point.</li>
       <li><b>Spend energy.</b> Each trick gives 3 energy. A card costs its tier (1&ndash;3); a charge costs 1 more. A tier-3 card leaves nothing for a charge.</li>
       <li><b>Burn a charge.</b> Each duelist has two charges. Arm one before you commit for +15% to the called stat &mdash; a bluff or a rescue.</li>
+      <li><b>Call a gambit.</b> Once per duel, stake one trick: it deals +2 damage, and if you lose it you take +2 more.</li>
       <li><b>Ride momentum.</b> Three tricks in a row adds +2 damage. A trick win deals 4, +2 for double the stat and +2 more for quadruple.</li>
       <li><b>Know the traits.</b> <b>Apex</b> wins a tied stat. <b>Swift</b> recovers a charge when it loses. <b>Stalwart</b> denies the winner momentum.</li>
       <li><b>Watch the omen.</b> Each trick names a crest &mdash; Sun, Moon or Star. A committed card of that crest adds 10% to the called stat.</li>
