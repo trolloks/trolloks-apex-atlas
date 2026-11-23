@@ -174,13 +174,17 @@ function slotHtml(match, index, ui) {
     const card = match.deck.cards.find((c) => c.id === commit.cardId);
     const side = match.result?.sides?.[index];
     const outcome = match.result && match.result.winner >= 0 ? (match.result.winner === index ? 'winner' : 'loser') : '';
-    return cardHtml(match.deck, card, {
+    const cardMarkup = cardHtml(match.deck, card, {
       duel: true,
       called: match.stat,
       boosted: side?.charge,
       omen: side?.omen,
       outcome,
     });
+    const hit = match.result && match.result.winner === 1 - index && match.result.damage
+      ? `<span class="damage-splash">-${match.result.damage}</span>`
+      : '';
+    return `<div class="duel-card-wrap">${cardMarkup}${hit}</div>`;
   }
   if (commit) return `<div class="card-back" aria-label="Card committed">${emblem(match.deck.emblem)}<span class="back-mark">SET</span></div>`;
   return `<div class="empty-slot">${match.phase === 'call' ? 'Call a stat' : 'Commit a card'}</div>`;
