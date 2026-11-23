@@ -1,16 +1,12 @@
 release	utc	commit	submission_id	change
-r1	2026-11-22T19:45Z	54528de	-	Apex Atlas v1: three decks, 24 cards, stat-call duel, bots, local 2P, packs, 4 screenshots
-r1	2026-11-22T19:48Z	111ac9f	01a204cd-9a83-7228-88ff-ca35896bf598	Accepted entry: pass checks, badges and About fixed
-r2	2026-11-22T19:51Z	3f8af2d	01a204d0-ae7c-751f-b3ce-b069b3163442	Bigger duel cards, compass table, boosted stat shown on the card, wider opponent hand
-r3	2026-11-22T20:10Z	d98f3e2	01a204d2-b426-73a0-a077-2474e758a2c0	Cover is now the duel table; title moves to the second screenshot
-r4	2026-11-22T20:05Z	pending	pending	Four-card hands, deck counts, no-overlap hand layout, inactive commit styling
-r5	2026-11-22T20:45Z	ecf9737	01a204e6-0f76-76ca-b17d-78f88aac5c53	Local hot-seat hides the idle hand, scouted cards inspectable, immediate repaint at reveal
-r6	2026-11-22T21:12Z	ddf463a	01a204f3-71d0-778b-8983-10f1ce4ad38e	Alternating stat call each trick; balanced matches; help text updated
-r7	2026-11-22T20:56Z	57f1dde	01a204fb-8d64-754e-bc79-b2b68b018051	Card traits: Apex wins ties, Swift refunds a charge, Stalwart denies momentum; round 1 rank 611/2744 (0.584)
-r8	2026-11-22T22:17Z	pending	pending	Round-2 rework: sun/moon/star crests, per-trick omen +10%, result banners over the final trick
-r9	2026-11-22T22:42Z	pending	pending	Crest suit strip + label on cards; cleaner hand traits; final trick stays behind result banner
-r10	2026-11-22T23:11Z	3b287a6	01a20553-7586-7721-8adb-8a6d1b7d14e6	Cream parchment card faces with dark ink for thumbnail legibility; crest borders and contrast fixed
-r11	2026-11-22T22:41Z	pending	pending	Larger on-table and hand stat type for thumbnail legibility
-r12	2026-11-22T23:06Z	fff2fd3	held for 2026-11-23 00:00Z quota reset	Energy and card costs (tier 1-3, 3 energy per trick); charge costs +1 energy
-r13	2026-11-23T03:03Z	pending	pending	Resolve life and damage duel: 30 life, 4/6/8 damage by stat margin, +2 momentum; life bars replace points
-r14	2026-11-23T03:47Z	pending	pending	Damage splash on the losing card; round 3 score 0.640 (143/4443)
+r1	2026-11-22T19:45Z	54528de	01a204cd-9a83-7228-88ff-ca35896bf598	Accepted entry: three decks, 24 cards, bots, local 2P, packs, 4 screenshots
+r2	2026-11-22T19:51Z	3f8af2d	01a204d0-ae7c-751f-b3ce-b069b3163442	Bigger duel cards, compass table, boosted stat shown on the card
+r3	2026-11-22T20:10Z	d98f3e2	01a204d2-b426-73a0-a077-2474e758a2c0	Cover is the duel table; title moves second
+r4	2026-11-22T20:05Z	ecf9737	01a204e6-0f76-76ca-b17d-78f88aac5c53	Four-card hands, deck counts, no-overlap hand layout
+r5	2026-11-22T20:29Z	ddf463a	01a204f3-71d0-778b-8983-10f1ce4ad38e	Local hot-seat hides the idle hand; scouted cards inspectable
+r6	2026-11-22T20:38Z	57f1dde	01a204fb-8d64-754e-bc79-b2b68b018051	Card traits: Apex wins ties, Swift refunds a charge, Stalwart denies momentum; round 1: 611/2744, 0.584
+r7	2026-11-22T22:40Z	ecf9737	01a2056a-fc81-70c1-b0b5-eba4c04be6b3	Alternating stat call; round 2 kept the previous build
+r8	2026-11-23T00:01Z	3b287a6	01a205b4-d42d-70fb-94c9-c60ba679a8fe	Cream parchment card faces; crest strips/labels; round 2: 220/3429, 0.580
+r9	2026-11-22T22:56Z	57f1dde	-	Held energy/omen iteration (superseded)
+r10	2026-11-23T02:32Z	fff2fd3	01a2063f-b21e-747e-9e35-ccabdbdc7a1b	Energy and card costs; Resolve life and damage duel
+r11	2026-11-23T03:44Z	5a0cc56	01a20680-efda-7761-8505-39859d394c5d	Damage splash on losing card; final entry; round 3: 143/4443, 0.640
